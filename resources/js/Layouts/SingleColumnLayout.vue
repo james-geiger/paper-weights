@@ -26,6 +26,9 @@ import Navigation from '@/Components/Navigation/Navigation.vue'
 
 
 export default defineComponent({
+    props: {
+            title: String,
+        },
   components: {
     Navigation,
     Head,
