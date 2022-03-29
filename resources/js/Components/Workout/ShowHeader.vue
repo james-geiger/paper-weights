@@ -6,7 +6,7 @@
         <ChevronLeftIcon class="-ml-1 mr-2 h-5 w-5 text-gray-500" aria-hidden="true" />
         Back to Workout List
         </Link>
-        <h1 contenteditable="" v-text="workout.name" @blur="update"
+        <h1 contenteditable="" v-text="workout.name" @blur="update" ref="workoutTitle"
             class="my-2 text-xl leading-6 font-semibold text-gray-900 block w-full sm:truncate rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         </h1>
         <div class="flex flex-col sm:flex-row items-start justify-between">
@@ -149,7 +149,7 @@
                 this.$emit('showSearch', true)
             },
             update(e) {
-                this.workout.name = e.target.innerHTML
+                this.workout.name = this.$refs.workoutTitle.innerHTML
                 Inertia.put(route('workouts.update', this.workout.id), {
                     name: this.workout.name,
                     date: this.workout.date
