@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('logs_modifiers', function (Blueprint $table) {
+        Schema::create('log_modifier', function (Blueprint $table) {
             $table->foreignUuid('log_id')->constrained('logs');
             $table->foreignUuid('modifier_id')->constrained('modifiers');
         });
