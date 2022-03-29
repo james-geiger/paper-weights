@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('exercises__equipment', function (Blueprint $table) {
+        Schema::create('exercise_muscle', function (Blueprint $table) {
             $table->foreignUuid('exercise_id')->constrained('exercises');
-            $table->foreignUuid('equipment_id')->constrained('equipment');
+            $table->foreignUuid('muscle_id')->constrained('muscles');
+            $table->enum('type', ['primary', 'secondary']);
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exercises__equipment');
+        Schema::dropIfExists('exercise_muscle');
     }
 };

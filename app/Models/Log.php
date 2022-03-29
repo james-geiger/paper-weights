@@ -48,7 +48,7 @@ class Log extends Model
      */
     public function modifiers()
     {
-        return $this->belongsToMany(Modifier::class, 'logs_modifiers');
+        return $this->belongsToMany(Modifier::class, 'log_modifier');
     }
 
 }

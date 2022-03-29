@@ -24,7 +24,7 @@ class Exercise extends Model
      */
     public function equipment()
     {
-        return $this->belongsToMany(Equipment::class, 'exercises_equipment');
+        return $this->belongsToMany(Equipment::class, 'exercise_equipment');
     }
 
     /**
@@ -32,7 +32,7 @@ class Exercise extends Model
      */
     public function muscles()
     {
-        return $this->belongsToMany(Muscle::class, 'exercises_muscles')->withPivot('type')->as('relationships');
+        return $this->belongsToMany(Muscle::class, 'exercise_muscle')->withPivot('type')->as('relationships');
     }
 
     /**
