@@ -1,0 +1,125 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreWorkoutRequest;
+use App\Http\Requests\UpdateWorkoutRequest;
+use App\Models\Workout;
+use Inertia\Inertia;
+
+use Auth;
+use Carbon\Carbon;
+
+class WorkoutController extends Controller
+{
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $workouts = Workout::AuthUser()->newest()->get();
+
+        return Inertia::render('Workout/Index', ['workouts' => $workouts]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreWorkoutRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StoreWorkoutRequest $request)
+    {
+        $dt = new Carbon();
+
+        $workout = Workout::create([
+            'user_id' => Auth::user()->id,
+            'name' => 'New Workout '.$dt->toFormattedDateString(),
+            'date' => $dt->toDateString()
+        ]);
+
+        $logs = $workout->logs->sortBy([
+            ['order', 'asc']
+        ]);
+
+        return Inertia::render('Workout/Show', ['workout' => $workout, 'logs' => $logs]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Workout  $Workout
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Workout $workout)
+    {
+        $logs = $workout->logs->loadCount('sets')->loadSum('sets', 'reps')->sortBy([
+            ['order', 'asc']
+        ]);
+
+        return Inertia::render('Workout/Show', ['workout' => $workout, 'logs' => $logs]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Workout  $Workout
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Workout $workout)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateWorkoutRequest  $request
+     * @param  \App\Models\Workout  $Workout
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdateWorkoutRequest $request, Workout $workout)
+    {
+        $validated = $request;
+
+        $workout->name = $request->name;
+        $workout->date = $request->date;
+
+        $workout->save();
+
+        return back()->with('status', 'workout-updated');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Workout  $Workout
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Workout $workout)
+    {
+        $workout->sets()->delete();
+        $workout->logs()->delete();
+        $workout->delete();
+
+        return redirect()->action([WorkoutController::class, 'index']);
+    }
+}
