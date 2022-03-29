@@ -24,17 +24,8 @@ use App\Http\Controllers\WorkoutController;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->action([WorkoutController::class, 'index']);
 });
-
-Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
 
 Route::resources([
     'workouts' => WorkoutController::class,

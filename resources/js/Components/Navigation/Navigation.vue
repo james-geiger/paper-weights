@@ -81,7 +81,6 @@ import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import { Link } from '@inertiajs/inertia-vue3';
 
 const navigation = [
-  { name: 'Dashboard', href: route('dashboard'), current: route().current('dashboard') },
   { name: 'Workouts', href: route('workouts.list'), current: route().current('workouts.*') || route().current('logs.*') },
   { name: 'Exercises', href: '#', current: false },
 ]

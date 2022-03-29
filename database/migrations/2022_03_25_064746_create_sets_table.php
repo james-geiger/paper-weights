@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sets', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
             $table->foreignUuid('log_id')->constrained();
             $table->integer('order');
             $table->decimal('reps', $precision = 8, $scale = 2);
