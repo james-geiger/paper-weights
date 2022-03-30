@@ -23,23 +23,17 @@
             <div class="mt-4" v-if="showWeight">
                 <label for="weight" class="block text-sm font-medium text-gray-700">Weight Used</label>
                 <div class="mt-1 flex rounded-md shadow-sm">
-                    <button type="button" @click="decreaseWeight(1)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    <button type="button" @click="decreaseWeight(5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <ChevronDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-                    </button>
-                    <button type="button" @click="decreaseWeight(5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-none text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-                        <span>5</span>
                     </button>
                     <button type="button" @click="decreaseWeight(10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-none text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <span>10</span>
                     </button>
-                    <input type="number" v-model="weight" name="weight" id="weight" class="-ml-px z-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none sm:text-sm border-gray-300 text-center" min=0 />
+                    <input type="number" pattern="\d*" v-model="weight" name="weight" id="weight" class="-ml-px z-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none sm:text-sm border-gray-300 text-center" min=0 />
                     <button type="button" @click="increaseWeight(10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <span>10</span>
                     </button>
-                    <button type="button" @click="increaseWeight(5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-none text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-                        <span>5</span>
-                    </button>
-                    <button type="button" @click="increaseWeight(1)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    <button type="button" @click="increaseWeight(5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <ChevronUpIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </button>
                 </div>
@@ -50,19 +44,11 @@
                     <button type="button" @click="decreaseReps(1)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <ChevronDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </button>
-                    <button type="button" @click="decreaseReps(8)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-none text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-                        <span>8</span>
-                    </button>
-                    <button type="button" @click="decreaseReps(10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-none text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-                        <span>10</span>
-                    </button>
-                    <input type="number" v-model="reps" name="reps" id="reps" class="-ml-px z-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none sm:text-sm border-gray-300 text-center" min=0 />
-                    <button type="button" @click="increaseReps(10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-                        <span>10</span>
-                    </button>
-                    <button type="button" @click="increaseReps(8)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-none text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-                        <span>8</span>
-                    </button>
+
+
+                    <input type="number" pattern="\d*" v-model="reps" name="reps" id="reps" class="-ml-px z-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none sm:text-sm border-gray-300 text-center" min=0 />
+
+
                     <button type="button" @click="increaseReps(1)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <ChevronUpIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </button>
