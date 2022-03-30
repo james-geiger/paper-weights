@@ -80,14 +80,14 @@
                 <div v-for="(group, index) in details" :key="group">
                     <div
                         class="px-3 py-1 border-t border-b border-gray-200 bg-gray-50 text-sm font-medium text-gray-500">
-                        <h3>{{ index }}</h3>
+                        <h3>{{ toTitleCase(index) }}</h3>
                     </div>
                     <div class="flow-root">
                         <ul role="list" class="divide-y divide-gray-200">
                             <li v-for="(muscle, index) in group" :key="muscle">
                                 <div class="px-3 py-5 relative focus-within:ring-2 focus-within:ring-indigo-500">
                                     <h3 class="text-sm font-semibold text-gray-800">
-                                        {{ toTitleCase(index) }}
+                                        {{ index }}
                                     </h3>
                                     <div class="mt-1 text-sm text-gray-600 line-clamp-2" v-for="tag in muscle"
                                         :key="tag">
