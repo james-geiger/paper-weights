@@ -87,7 +87,7 @@
                             <li v-for="(muscle, index) in group" :key="muscle">
                                 <div class="px-3 py-5 relative focus-within:ring-2 focus-within:ring-indigo-500">
                                     <h3 class="text-sm font-semibold text-gray-800">
-                                        {{ index }}
+                                        {{ toTitleCase(index) }}
                                     </h3>
                                     <div class="mt-1 text-sm text-gray-600 line-clamp-2" v-for="tag in muscle"
                                         :key="tag">
