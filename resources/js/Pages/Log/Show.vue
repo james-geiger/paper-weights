@@ -102,7 +102,7 @@
                     <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.reps) }}</span>&nbsp;<span class="text-gray-500">Reps</span></p>                </div>
                 </li>
             </ul>
-            <span v-else>No prior workouts logged for this exercise.</span>
+            <span class="ml-2" v-else>No prior workouts have been logged for this exercise.</span>
             </div>
         </template>
     </app-layout>
