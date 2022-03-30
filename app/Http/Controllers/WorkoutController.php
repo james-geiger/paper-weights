@@ -127,6 +127,7 @@ class WorkoutController extends Controller
 
         $workout->name = $request->name;
         $workout->date = $request->date;
+        $workout->time = $request->time;
 
         $workout->save();
 

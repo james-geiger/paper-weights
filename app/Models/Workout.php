@@ -41,7 +41,7 @@ class Workout extends Model
     protected function humanReadableTime(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attributes) => (array_key_exists('time', $attributes)) ? (new Carbon())->format('g:i A') : ''
+            get: fn ($value, $attributes) => (array_key_exists('time', $attributes)) ? (new Carbon($attributes['time']))->format('g:i A') : ''
         );
     }
 

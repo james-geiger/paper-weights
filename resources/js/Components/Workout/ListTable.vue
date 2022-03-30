@@ -3,38 +3,44 @@
                 message="Are you sure you want to delete this workout and its associated sets?  This can't be undone."
                 title="Delete Workout" @delete="handleDelete" @cancel="handleCancelDelete" />
   <div class="bg-white shadow overflow-hidden sm:rounded-md">
-    <ul role="list" class="divide-y divide-gray-200">
-      <li v-for="workout in workouts" :key="workout.id" class="group hover:bg-gray-50 cursor-pointer">
-          <div class="flex flex-row items-center justify-between">
-              <Link :href="route('workouts.show', workout.id)" class="grow block px-4 py-4 sm:px-6">
-            <div class="flex items-center justify-between">
-              <p class="text-md font-medium text-indigo-600 truncate" v-if="workout.name">
-                {{ workout.name }}
-              </p>
-            </div>
-            <div class="mt-2 sm:flex sm:justify-between">
-              <div class="sm:flex">
-                <p class="flex items-center text-sm text-gray-500">
-                  <CalendarIcon class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-                  <time :datetime="workout.date">{{ workout.human_readable_date }}</time>
-                </p>
-                <p v-if="workout.time" class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                  <ClockIcon class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-                  <time :datetime="workout.time">{{ workout.human_readable_time }}</time>
-                </p>
-              </div>
-            </div>
-          </Link>
-          <div class="px-4 py-4 sm:px-6">
-              <div class="flex items-center justify-between space-x-2">
-                <button @click="beginDelete(workout.id)" type="button" class="inline-flex items-center p-1.5 border border-gray-300 rounded-full shadow-sm text-gray-700 bg-white hover:bg-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <TrashIcon class="h-5 w-5" aria-hidden="true" />
-                </button>
-              </div>
-          </div>
-          </div>
-      </li>
-    </ul>
+<ul role="list" class="divide-y divide-gray-200">
+
+                                <li v-for="workout in workouts" :key="workout.id" class="px-4 py-5 sm:px-6 bg-white divide-y divide-gray-200">
+                                    <div class="flex space-x-3">
+                                        <div class="min-w-0 flex-1">
+                                            <p class="text-lg font-medium text-gray-900 mb-2">
+                                                {{ workout.name }}
+                                            </p>
+                                            <div class="inline-flex w-full space-x-6 text-sm text-gray-500">
+                                                <span class="inline-flex justify-center items-center">
+                                                    <CalendarIcon class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                    <time :datetime="workout.date">{{ workout.human_readable_date }}</time>
+                                                </span>
+                                                <span v-if="workout.time" class="inline-flex justify-center items-center">
+                                                    <ClockIcon class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                    <time :datetime="workout.time">{{ workout.human_readable_time }}</time>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0 self-center flex space-x-4">
+                                            <div class="relative z-10 inline-block text-left">
+                                                <a :href="route('workouts.show', workout.id)">
+                                                    <button type="button"
+                                                        class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
+                                                        <PencilIcon class="h-5 w-5" />
+                                                    </button>
+                                                </a>
+                                            </div>
+                                            <div class="relative z-10 inline-block text-left handle">
+                                                    <button type="button" @click="beginDelete(workout.id)"
+                                                        class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
+                                                        <TrashIcon class="h-5 w-5" />
+                                                    </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                    </ul>
   </div>
 </template>
 

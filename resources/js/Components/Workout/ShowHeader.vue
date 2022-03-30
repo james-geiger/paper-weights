@@ -19,6 +19,13 @@
                             <input @change="update" type="date" name="date" id="date" v-model="workout.date"
                                 class="focus:ring-indigo-500 focus:border-indigo-500 block w-full border border-white shadow-none pl-7 py-0 sm:text-sm rounded-md" />
                         </div>
+                        <div class="relative rounded-md">
+                            <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none">
+                                <ClockIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            </div>
+                            <input @change="update" type="time" name="date" id="date" v-model="workout.time"
+                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full border border-white shadow-none pl-7 py-0 sm:text-sm rounded-md" />
+                        </div>
                     </div>
             </div>
             <div class="mt-2 sm:flex flex-col sm:flex-row lg:mt-0 lg:ml-4">
@@ -83,7 +90,8 @@
         LocationMarkerIcon,
         PencilIcon,
         TrashIcon,
-        PlusIcon
+        PlusIcon,
+        ClockIcon
     } from '@heroicons/vue/outline'
     import {
         Menu,
@@ -111,6 +119,7 @@
             BriefcaseIcon,
             CalendarIcon,
             CheckIcon,
+            ClockIcon,
             ChevronDownIcon,
             ChevronRightIcon,
             ChevronLeftIcon,
@@ -152,7 +161,8 @@
                 this.workout.name = this.$refs.workoutTitle.innerHTML
                 Inertia.put(route('workouts.update', this.workout.id), {
                     name: this.workout.name,
-                    date: this.workout.date
+                    date: this.workout.date,
+                    time: this.workout.time
                 })
             }
         }
@@ -162,10 +172,11 @@
 
 <style scope>
     input[type=date]::-webkit-clear-button,
-    input[type=date]::-webkit-inner-spin-button {
+    input[type=date]::-webkit-inner-spin-button,
+    input[type=time]::-webkit-clear-button,
+    input[type=time]::-webkit-inner-spin-button {
         display: none;
     }
-
     input[type=date]::-webkit-datetime-edit,
     input[type=date]::-webkit-datetime-edit-fields-wrapper,
     input[type=date]::-webkit-datetime-edit-month-field,
@@ -175,8 +186,8 @@
         padding-top: 0 !important;
         white-space: normal;
     }
-
-    input[type=date]::-webkit-calendar-picker-indicator {
+    input[type=date]::-webkit-calendar-picker-indicator,
+    input[type=time]::-webkit-calendar-picker-indicator {
         position: absolute;
         left: 0;
         top: 0;
@@ -187,5 +198,4 @@
         cursor: pointer;
         background-image: none;
     }
-
 </style>
