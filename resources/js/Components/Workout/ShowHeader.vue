@@ -61,7 +61,7 @@
                     </Menu>
             </div>
         </div>
-        <div class='block fixed bottom-5 right-5 sm:hidden'>
+        <div class='block fixed bottom-5 right-5 sm:hidden z-20'>
             <button type="button" v-on:click="showSearch"
                 class="inline-flex items-center px-3 py-3 border border-transparent rounded-full shadow-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <PlusIcon class="h-6 w-6" aria-hidden="true" />
