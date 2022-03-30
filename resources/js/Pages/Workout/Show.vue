@@ -14,100 +14,68 @@
                         <draggable :list="logs" tag="transition-group" item-key="id" @end="handleDrop">
                             <template #item="{element}">
                                 <li class="px-4 py-5 sm:px-6 bg-white divide-y divide-gray-200">
-                                        <div class="flex space-x-3">
-                                            <div class="min-w-0 flex-1">
-                                                <p class="text-lg font-medium text-gray-900 mb-2">
-                                                    <a :href="route('exercises.show', element.exercise.id)" class="hover:underline">{{ element.exercise.name }}</a>
-                                                </p>
-                                                <div class="inline-flex w-full space-x-6 text-sm text-gray-500">
-                                                    <span class="inline-flex justify-center items-center">
-                                                        <CollectionIcon class="h-4 w-4 mr-2" />
-                                                        {{ Math.round(element.sets_count) }}
-                                                    </span>
-                                                    <span class="inline-flex justify-center items-center">
-                                                        <HashtagIcon class="h-4 w-4 mr-2" />
-                                                        {{ Math.round(element.sets_sum_reps) }}
-                                                    </span>
-                                                    <span class="inline-flex justify-center items-center">
-                                                        <ScaleIcon class="h-4 w-4 mr-2" />
-                                                        {{ weightVolume(element.sets, 'lbs') }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="flex-shrink-0 self-center flex space-x-4">
-                                                <div class="relative z-10 inline-block text-left">
-                                                    <a :href="route('logs.show', element.id)">
-                                                        <button type="button"
-                                                            class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
-                                                            <PencilIcon class="h-5 w-5" />
-                                                        </button>
-                                                    </a>
-                                                </div>
-                                                <Menu as="div" class="relative z-10 inline-block text-left">
-                                                    <div>
-                                                        <MenuButton
-                                                            class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
-                                                            <span class="sr-only">Open options</span>
-                                                            <DotsVerticalIcon class="h-5 w-5" aria-hidden="true" />
-                                                        </MenuButton>
-                                                    </div>
-
-                                                    <transition enter-active-class="transition ease-out duration-100"
-                                                        enter-from-class="transform opacity-0 scale-95"
-                                                        enter-to-class="transform opacity-100 scale-100"
-                                                        leave-active-class="transition ease-in duration-75"
-                                                        leave-from-class="transform opacity-100 scale-100"
-                                                        leave-to-class="transform opacity-0 scale-95">
-                                                        <MenuItems
-                                                            class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                            <div class="py-1">
-                                                                <MenuItem v-slot="{ active }">
-                                                                <button @click="beginDelete(element.id)"
-                                                                    :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex px-4 py-2 text-sm w-full']">
-                                                                    <TrashIcon class="mr-3 h-5 w-5 text-gray-400"
-                                                                        aria-hidden="true" />
-                                                                    <span>Delete Exercise</span>
-                                                                </button>
-                                                                </MenuItem>
-                                                            </div>
-                                                        </MenuItems>
-                                                    </transition>
-                                                </Menu>
+                                    <div class="flex space-x-3">
+                                        <div class="min-w-0 flex-1">
+                                            <p class="text-lg font-medium text-gray-900 mb-2">
+                                                <a :href="route('exercises.show', element.exercise.id)"
+                                                    class="hover:underline">{{ element.exercise.name }}</a>
+                                            </p>
+                                            <div class="inline-flex w-full space-x-6 text-sm text-gray-500">
+                                                <span class="inline-flex justify-center items-center">
+                                                    <CollectionIcon class="h-4 w-4 mr-2" />
+                                                    {{ Math.round(element.sets_count) }}
+                                                </span>
+                                                <span class="inline-flex justify-center items-center">
+                                                    <HashtagIcon class="h-4 w-4 mr-2" />
+                                                    {{ Math.round(element.sets_sum_reps) }}
+                                                </span>
+                                                <span class="inline-flex justify-center items-center">
+                                                    <ScaleIcon class="h-4 w-4 mr-2" />
+                                                    {{ weightVolume(element.sets, 'lbs') }}
+                                                </span>
                                             </div>
                                         </div>
-                                    <!--
-                                <div class="px-4 py-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
-                                    <div class="">
-                                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                            {{ element.exercise.name }}</h3>
-                                    </div>
-                                    <div class="flex-shrink-0">
-                                        <div class="flex flex-row">
-                                            <span class="sm:block">
-                                                <button type="button" @click="beginDelete(element.id)"
-                                                    class="inline-flex items-center px-2 py-2 border border-white text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                                    <TrashIcon class="h-5 w-5 text-gray-500" />
-                                                </button>
-                                            </span>
-                                            <span class="sm:block ml-2">
+                                        <div class="flex-shrink-0 self-center flex space-x-4">
+                                            <div class="relative z-10 inline-block text-left">
                                                 <a :href="route('logs.show', element.id)">
                                                     <button type="button"
-                                                        class="inline-flex items-center px-2 py-2 border border-white text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                                        <PencilIcon class="h-5 w-5 text-gray-500" />
+                                                        class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
+                                                        <PencilIcon class="h-5 w-5" />
                                                     </button>
                                                 </a>
-                                            </span>
+                                            </div>
+                                            <Menu as="div" class="relative z-10 inline-block text-left">
+                                                <div>
+                                                    <MenuButton
+                                                        class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
+                                                        <span class="sr-only">Open options</span>
+                                                        <DotsVerticalIcon class="h-5 w-5" aria-hidden="true" />
+                                                    </MenuButton>
+                                                </div>
+
+                                                <transition enter-active-class="transition ease-out duration-100"
+                                                    enter-from-class="transform opacity-0 scale-95"
+                                                    enter-to-class="transform opacity-100 scale-100"
+                                                    leave-active-class="transition ease-in duration-75"
+                                                    leave-from-class="transform opacity-100 scale-100"
+                                                    leave-to-class="transform opacity-0 scale-95">
+                                                    <MenuItems
+                                                        class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                        <div class="py-1">
+                                                            <MenuItem v-slot="{ active }">
+                                                            <button @click="beginDelete(element.id)"
+                                                                :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'flex px-4 py-2 text-sm w-full']">
+                                                                <TrashIcon class="mr-3 h-5 w-5 text-gray-400"
+                                                                    aria-hidden="true" />
+                                                                <span>Delete Exercise</span>
+                                                            </button>
+                                                            </MenuItem>
+                                                        </div>
+                                                    </MenuItems>
+                                                </transition>
+                                            </Menu>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="px-4 py-5 sm:p-6">
-                                    <ol class="ml-4">
-                                        <li v-for="set in element.sets" :key="set.id"><span
-                                                v-if="set.weight > 0">Weight: {{ set.weight }}, </span>Reps:
-                                            {{ set.reps }}</li>
-                                    </ol>
-                                </div>
-                                -->
                                 </li>
                             </template>
                         </draggable>
@@ -123,7 +91,36 @@
             </div>
         </template>
         <template #right>
-            <div class="p-6"></div>
+            <div class="p-6">
+                <div class="pb-5">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Workout Insights</h3>
+                </div>
+                <div v-for="(group, index) in details" :key="group">
+                    <div
+                        class="px-3 py-1 border-t border-b border-gray-200 bg-gray-50 text-sm font-medium text-gray-500">
+                        <h3>{{ index }}</h3>
+                    </div>
+                    <div class="flow-root">
+                        <ul role="list" class="divide-y divide-gray-200">
+                            <li v-for="(muscle, index) in group" :key="muscle">
+                                <div class="px-3 py-5 relative focus-within:ring-2 focus-within:ring-indigo-500">
+                                    <h3 class="text-sm font-semibold text-gray-800">
+                                        {{ index }}
+                                    </h3>
+                                    <div class="mt-1 text-sm text-gray-600 line-clamp-2" v-for="tag in muscle"
+                                        :key="tag">
+                                        <span>{{ toTitleCase(tag.type) }} Activation:</span>
+                                        <ul class="ml-4">
+                                            <li>{{ tag.count }} exercises</li>
+                                            <li>{{ Number(tag.total_volume)/1000 }}k lbs volume</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </template>
     </app-layout>
 </template>
@@ -161,6 +158,8 @@
         StarIcon
     } from '@heroicons/vue/solid'
 
+    const toTitleCase = str => str.replace(/\b\S/g, t => t.toUpperCase());
+
     export default defineComponent({
         components: {
             draggable,
@@ -183,12 +182,17 @@
             FlagIcon,
             StarIcon,
         },
-        props: ['workout', 'logs'],
+        props: ['workout', 'logs', 'details'],
         data() {
             return {
                 searching: false,
                 showDeleting: false,
                 modelDeleting: ''
+            }
+        },
+        setup() {
+            return {
+                toTitleCase
             }
         },
         methods: {
@@ -226,16 +230,16 @@
                 })
                 console.log(e)
             },
-            numberOfReps(set){
+            numberOfReps(set) {
                 return _.sumBy(set, 'reps');
             },
-            weightVolume(set, unit){
+            weightVolume(set, unit) {
                 var volume = 0
                 set.forEach(e => {
                     volume += e.reps * e.weight
                 });
                 if (volume >= 1000) {
-                    volume = volume/1000
+                    volume = volume / 1000
                     return volume + 'k ' + unit
                 } else {
                     return volume + ' ' + unit

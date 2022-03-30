@@ -79,7 +79,17 @@ class LogController extends Controller
 
         $workout = $log->workout;
 
-        return Inertia::render('Log/Show', ['workout' => $workout, 'log' => $log, 'modifiers' => $modifiers]);
+        $last_log = Log::with('workout')
+                        ->where('exercise_id', $log->exercise->id)
+                        ->where('id', '<>', $log->id)
+                        ->select('logs.*', \DB::raw('(SELECT date FROM workouts WHERE logs.workout_id = workouts.id ) as date'))
+                        ->orderBy('date', 'desc')
+                        ->withCount('sets')
+                        ->withSum('sets', 'reps')
+                        ->limit(1)
+                        ->get();
+
+        return Inertia::render('Log/Show', ['workout' => $workout, 'log' => $log, 'last_log' => $last_log, 'modifiers' => $modifiers]);
 
     }
 

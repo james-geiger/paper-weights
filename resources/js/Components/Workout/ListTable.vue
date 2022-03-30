@@ -1,4 +1,7 @@
 <template>
+<delete-alert :open="showDeleting"
+                message="Are you sure you want to delete this workout and its associated sets?  This can't be undone."
+                title="Delete Workout" @delete="handleDelete" @cancel="handleCancelDelete" />
   <div class="bg-white shadow overflow-hidden sm:rounded-md">
     <ul role="list" class="divide-y divide-gray-200">
       <li v-for="workout in workouts" :key="workout.id" class="group hover:bg-gray-50 cursor-pointer">
@@ -24,7 +27,7 @@
           </Link>
           <div class="px-4 py-4 sm:px-6">
               <div class="flex items-center justify-between space-x-2">
-                <button @click="handleDelete(workout.id)" type="button" class="inline-flex items-center p-1.5 border border-gray-300 rounded-full shadow-sm text-gray-700 bg-white hover:bg-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <button @click="beginDelete(workout.id)" type="button" class="inline-flex items-center p-1.5 border border-gray-300 rounded-full shadow-sm text-gray-700 bg-white hover:bg-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <TrashIcon class="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
@@ -40,11 +43,27 @@ import { CalendarIcon, ClockIcon, PencilIcon } from '@heroicons/vue/solid'
 import { TrashIcon } from '@heroicons/vue/outline'
 import { Link } from '@inertiajs/inertia-vue3'
 import { Inertia } from '@inertiajs/inertia'
+import DeleteAlert from '@/Components/Modal/DeleteAlert.vue'
+import { ref } from 'vue'
 
-const handleDelete = (id) => {
-    console.log('deleting...' + id)
-    Inertia.delete(route('workouts.destroy', id))
+const showDeleting = ref(false)
+const modelDeleting = ref('')
+
+const beginDelete = id => {
+    showDeleting.value = true,
+    modelDeleting.value = id
 }
+
+const handleDelete = () => {
+        Inertia.delete(route('workouts.destroy', modelDeleting.value))
+        showDeleting.value = false
+        modelDeleting.value = ''
+}
+
+const handleCancelDelete = () => {
+        showDeleting.value = false
+        modelDeleting.value = ''
+    }
 
 export default {
   components: {
@@ -52,13 +71,18 @@ export default {
     CalendarIcon,
     ClockIcon,
     PencilIcon,
-    TrashIcon
+    TrashIcon,
+    DeleteAlert
   },
   props: ['workouts'],
   setup() {
     return {
-        handleDelete
+        showDeleting,
+        modelDeleting,
+        beginDelete,
+        handleDelete,
+        handleCancelDelete
     }
-  },
+  }
 }
 </script>

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Requests\UpdateWorkoutRequest;
+
+use Illuminate\Support\Facades\DB;
+
 use App\Models\Workout;
 use Inertia\Inertia;
 
@@ -75,7 +78,29 @@ class WorkoutController extends Controller
             ['order', 'asc']
         ]);
 
-        return Inertia::render('Workout/Show', ['workout' => $workout, 'logs' => $logs]);
+        $details = DB::table('workouts')
+            ->where('workouts.id', '=', $workout->id)
+            ->join('logs', 'logs.workout_id', '=', 'workouts.id')
+            ->join('sets', 'sets.log_id', '=', 'logs.id')
+            ->join('exercises', 'exercises.id', '=', 'logs.exercise_id')
+            ->join('exercise_muscle', 'exercise_muscle.exercise_id', '=', 'exercises.id')
+            ->join('muscles', 'exercise_muscle.muscle_id', '=', 'muscles.id')
+            ->join('muscle_groups', 'muscles.muscle_group_id', '=', 'muscle_groups.id')
+            ->groupBy('muscle_groups.name', 'muscles.name', 'exercise_muscle.type')
+            ->selectRaw(
+                'COUNT(DISTINCT(logs.id)) as count,
+                SUM(sets.weight * sets.reps) as total_volume,
+                SUM(sets.weight) as total_weight,
+                SUM(sets.reps) as total_reps,
+                muscle_groups.name AS group_name,
+                muscles.name,
+                exercise_muscle.type'
+            )
+            ->get()
+            ->groupBy(['group_name', 'name']);
+
+
+        return Inertia::render('Workout/Show', ['workout' => $workout, 'logs' => $logs, 'details' => $details ]);
     }
 
     /**

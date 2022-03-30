@@ -4,7 +4,7 @@
             <show-header :workout="workout" :log='log' @edit="editing = $event" @discard="discard" @showSearch="searching = $event"/>
         </template>
         <template #main>
-        <div>
+        <div class="px-6 py-6">
         <div class="">
             <div class="">
                 <label for="modifiers" class="block text-sm font-medium text-gray-700">Modifiers</label>
@@ -90,6 +90,20 @@
         <delete-alert :open="showDeleting" message="Are you sure you want to remove this exercise and its associated sets from this workout?" title="Delete Exercise" @delete="handleDelete" @cancel="handleCancelDelete"/>
         </div>
         </template>
+        <template #right>
+            <div class="px-6 py-6">
+                <div class="pb-5 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Past Workout Insights</h3>
+                </div>
+                <ul role="list" class="divide-y divide-gray-200">
+                <li v-for="set in last_log[0].sets" :key="set.id" class="py-4 flex">
+                <div class="ml-3">
+                    <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.weight) }}</span>&nbsp;<span class="text-gray-500">lbs</span></p>
+                    <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.reps) }}</span>&nbsp;<span class="text-gray-500">Reps</span></p>                </div>
+                </li>
+            </ul>
+            </div>
+        </template>
     </app-layout>
 </template>
 
@@ -121,7 +135,7 @@
             SwitchGroup,
             SwitchLabel
         },
-        props: ['workout', 'log', 'modifiers'],
+        props: ['workout', 'log', 'last_log', 'modifiers'],
         data(){
             return {
                 reps: 0,
