@@ -95,13 +95,14 @@
                 <div class="pb-5 border-b border-gray-200">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Past Workout Insights</h3>
                 </div>
-                <ul role="list" class="divide-y divide-gray-200">
+                <ul role="list" class="divide-y divide-gray-200" v-if="last_log.length > 0">
                 <li v-for="set in last_log[0].sets" :key="set.id" class="py-4 flex">
                 <div class="ml-3">
                     <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.weight) }}</span>&nbsp;<span class="text-gray-500">lbs</span></p>
                     <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.reps) }}</span>&nbsp;<span class="text-gray-500">Reps</span></p>                </div>
                 </li>
             </ul>
+            <span v-else>No prior workouts logged for this exercise.</span>
             </div>
         </template>
     </app-layout>
