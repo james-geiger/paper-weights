@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Providers\RouteServiceProvider;
 use Inertia\Inertia;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\ExerciseController;
@@ -24,7 +25,7 @@ use App\Http\Controllers\WorkoutController;
 */
 
 Route::get('/', function () {
-    return redirect()->action([WorkoutController::class, 'index']);
+    return redirect(RouteServiceProvider::HOME);
 });
 
 Route::resources([
@@ -48,6 +49,7 @@ Route::resource('groups', MuscleGroupController::class)->only([
 
 Route::get('/exercise/s', [ExerciseController::class, 'search'])->name('exercise.search');
 
+Route::patch('/log/reorder', [LogController::class, 'reorder'])->name('logs.reorder');
 
 Route::resource('workouts', WorkoutController::class)->names([
     'index' => 'workouts.list',

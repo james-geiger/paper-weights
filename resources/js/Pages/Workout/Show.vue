@@ -113,7 +113,6 @@
     } from 'vue'
     import draggable from 'vuedraggable'
     import {
-        TrashIcon,
         LightningBoltIcon,
         CollectionIcon,
         ScaleIcon,
@@ -133,11 +132,8 @@
         MenuItems
     } from '@headlessui/vue'
     import {
-        CodeIcon,
         PencilIcon,
-        DotsVerticalIcon,
-        FlagIcon,
-        StarIcon,
+        TrashIcon,
         MenuAlt4Icon
     } from '@heroicons/vue/solid'
 
@@ -150,21 +146,18 @@
             CollectionIcon,
             HashtagIcon,
             ScaleIcon,
-            ShowHeader,
-            Search,
+            MenuAlt4Icon,
             PencilIcon,
             TrashIcon,
-            DeleteAlert,
             LightningBoltIcon,
+            ShowHeader,
+            Search,
+            DeleteAlert,
             Menu,
             MenuButton,
             MenuItem,
             MenuItems,
-            MenuAlt4Icon,
-            CodeIcon,
-            DotsVerticalIcon,
-            FlagIcon,
-            StarIcon,
+
         },
         props: ['workout', 'logs', 'details'],
         data() {
@@ -212,7 +205,8 @@
                     oldIndex,
                     newIndex
                 })
-                console.log(e)
+                const new_order = this.logs.flatMap((e) => e.id)
+                Inertia.patch(route('logs.reorder'), {reordered_logs: new_order})
             },
             numberOfReps(set) {
                 return _.sumBy(set, 'reps');

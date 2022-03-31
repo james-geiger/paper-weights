@@ -54,6 +54,7 @@ class SetController extends Controller
             'weight' => $request->weight
         ]);
 
+        return back();
         return redirect()->action([LogController::class, 'show'], $set->log->id)->with('status', 'set-created');
     }
 

@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLogRequest;
 use App\Http\Requests\UpdateLogRequest;
+use Illuminate\Http\Request;
 use App\Models\Log;
 use App\Models\Modifier;
+
+use Illuminate\Support\Facades\Log as Logger;
 
 use Inertia\Inertia;
 
@@ -114,6 +117,27 @@ class LogController extends Controller
     public function update(UpdateLogRequest $request, Log $log)
     {
         $log->modifiers()->toggle($request->modifier_id);
+
+        return back()->with('status', 'log-modifier-updated');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function reorder(Request $request)
+    {
+        $logs = $request->reordered_logs;
+
+        foreach ($logs as $key => $log) {
+            Logger::debug($key);
+            Logger::debug($log);
+            $l = Log::find($log);
+            $l->order = $key + 1;
+            $l->save();
+        }
 
         return back()->with('status', 'log-modifier-updated');
     }

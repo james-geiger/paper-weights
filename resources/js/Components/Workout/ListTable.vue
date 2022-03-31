@@ -45,8 +45,8 @@
 </template>
 
 <script>
-import { CalendarIcon, ClockIcon, PencilIcon } from '@heroicons/vue/solid'
-import { TrashIcon } from '@heroicons/vue/outline'
+import { PencilIcon, TrashIcon } from '@heroicons/vue/solid'
+import { CalendarIcon, ClockIcon } from '@heroicons/vue/outline'
 import { Link } from '@inertiajs/inertia-vue3'
 import { Inertia } from '@inertiajs/inertia'
 import DeleteAlert from '@/Components/Modal/DeleteAlert.vue'

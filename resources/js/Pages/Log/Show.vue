@@ -1,7 +1,7 @@
 <template>
     <app-layout title="Exercise Log">
         <template #header>
-            <show-header :workout="workout" :log='log' @edit="editing = $event" @discard="discard" @showSearch="searching = $event"/>
+            <show-header :workout="workout" :log='log' @discard="beginDelete" />
         </template>
         <template #main>
         <div class="px-6 py-6">
@@ -23,17 +23,17 @@
             <div class="mt-4" v-if="showWeight">
                 <label for="weight" class="block text-sm font-medium text-gray-700">Weight Used</label>
                 <div class="mt-1 flex rounded-md shadow-sm">
-                    <button type="button" @click="decreaseWeight(5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    <button type="button" @click="adjustWeight(-5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <ChevronDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </button>
-                    <button type="button" @click="decreaseWeight(10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-none text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    <button type="button" @click="adjustWeight(-10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-none text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <span>10</span>
                     </button>
-                    <input type="number" pattern="\d*" v-model="weight" name="weight" id="weight" class="-ml-px z-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none sm:text-sm border-gray-300 text-center" min=0 />
-                    <button type="button" @click="increaseWeight(10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="number" pattern="\d*" v-model="form.weight" name="weight" id="weight" class="-ml-px z-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none sm:text-sm border-gray-300 text-center" min=0 />
+                    <button type="button" @click="adjustWeight(10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <span>10</span>
                     </button>
-                    <button type="button" @click="increaseWeight(5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    <button type="button" @click="adjustWeight(5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <ChevronUpIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </button>
                 </div>
@@ -41,18 +41,19 @@
             <div class="mt-4">
                 <label for="reps" class="block text-sm font-medium text-gray-700">Number of Reps</label>
                 <div class="mt-1 flex rounded-md shadow-sm">
-                    <button type="button" @click="decreaseReps(1)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    <button type="button" @click="adjustReps(-1)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <ChevronDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </button>
-                    <input type="number" pattern="\d*" v-model="reps" name="reps" id="reps" class="-ml-px z-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none sm:text-sm border-gray-300 text-center" min=0 />
-                    <button type="button" @click="increaseReps(1)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    <input type="number" pattern="\d*" v-model="form.reps" name="reps" id="reps" class="-ml-px z-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none sm:text-sm border-gray-300 text-center" min=0 />
+                    <button type="button" @click="adjustReps(1)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                         <ChevronUpIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </button>
                 </div>
             </div>
             <div class="mt-4">
-                <button type="button" v-on:click="handleAddSet" class="w-full sm:w-fit inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <PlusIcon class="ml-auto sm:-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                <button type="button" v-on:click="handleAddSet" :disabled="form.processing" class="w-full sm:w-fit inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <RefreshIcon v-if="form.processing" class="ml-auto sm:-ml-1 mr-2 h-5 w-5 animate-spin" aria-hidden="true" />
+                    <PlusIcon v-else class="ml-auto sm:-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                     <span class="mr-auto">Add Set</span>
                 </button>
             </div>
@@ -63,9 +64,11 @@
             </div>
             <ul role="list" class="divide-y divide-gray-200">
                 <li v-for="set in log.sets" :key="set.id" class="py-4 flex">
-                <div class="ml-3">
-                    <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.weight) }}</span>&nbsp;<span class="text-gray-500">lbs</span></p>
-                    <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.reps) }}</span>&nbsp;<span class="text-gray-500">Reps</span></p>                </div>
+                    <div class="ml-3">
+                        <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.weight) }}</span>&nbsp;<span class="text-gray-500">lbs</span></p>
+                        <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.reps) }}</span>&nbsp;<span class="text-gray-500">Reps</span></p>
+                        <p class="text-sm"><span class="font-medium text-gray-900">{{ set.order }}</span></p>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -91,10 +94,11 @@
 </template>
 
 <script>
-    import { defineComponent } from 'vue'
     import { PencilIcon, TrashIcon, PlusIcon } from '@heroicons/vue/outline'
-    import { PlusSmIcon, MinusSmIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/vue/solid'
+    import { ChevronUpIcon, ChevronDownIcon, RefreshIcon } from '@heroicons/vue/solid'
     import { Inertia } from '@inertiajs/inertia'
+    import { useForm } from '@inertiajs/inertia-vue3'
+    import { defineComponent, ref, reactive, computed, onMounted } from 'vue'
     import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
     import AppLayout from '@/Layouts/TwoColumnLayout.vue'
     import ShowHeader from '@/Components/Log/ShowHeader.vue'
@@ -102,6 +106,7 @@
     import DeleteAlert from '@/Components/Modal/DeleteAlert.vue'
 
     export default defineComponent({
+        props: ['workout', 'log', 'last_log', 'modifiers'],
         components: {
             AppLayout,
             ShowHeader,
@@ -110,85 +115,77 @@
             TrashIcon,
             DeleteAlert,
             PlusIcon,
-            PlusSmIcon,
-            MinusSmIcon,
             ChevronUpIcon,
             ChevronDownIcon,
+            RefreshIcon,
             Switch,
             SwitchGroup,
             SwitchLabel
         },
-        props: ['workout', 'log', 'last_log', 'modifiers'],
-        data(){
-            return {
+        setup (props) {
+            const showDeleting = ref(false)
+            const modelDeleting = ref('')
+            const mods = reactive({ selected: {} })
+            const numberOfSets = computed(() => props.log.sets.length )
+            const showWeight = computed(() => !mods.selected['5252eab0-a9a0-11ec-a5d4-2d2b9afa987a'])
+
+            const form = useForm({
+                log_id: props.log.id,
                 reps: 0,
-                weight: 0,
-                editing: false,
-                searching: false,
-                showDeleting: false,
-                modelDeleting: '',
-                enabled: false,
-                mods: {
-                    selected: {}
-                }
+                weight: 0
+            })
+
+            const handleAddSet = () => {
+                form.transform((data) => ({
+                    ...data,
+                    order: numberOfSets.value + 1
+                })).post(route('sets.store', {
+                    preserveScroll: true
+                }))
             }
-        },
-        mounted(){
-            this.$props.log.modifiers.forEach(e => {
-                this.mods.selected[e.id] = true
+
+            const onSelect = (id) => {
+                Inertia.put(route('logs.update', props.log.id), { modifier_id: id })
+            }
+
+            const adjustReps = (n) => ((form.reps + n < 0) ? form.reps = 0 : form.reps += n)
+
+            const adjustWeight = (n) => ((form.weight + n < 0) ? form.weight = 0 : form.weight += n)
+
+            const beginDelete = () => {
+                showDeleting.value = true,
+                modelDeleting.value = props.log.id
+            }
+
+            const handleDelete = () => {
+                Inertia.delete(route('logs.destroy', modelDeleting.value ))
+            }
+
+            const handleCancelDelete = () => {
+                showDeleting.value = false,
+                modelDeleting.value = ''
+            }
+
+            onMounted(() => {
+                props.log.modifiers.forEach(e => {
+                    mods.selected[e.id] = true
+                });
             });
-        },
-        methods:{
-            discard(){
-                window.alert('discarding')
-            },
-            onSelect(id, value){
-                Inertia.put(route('logs.update', this.log.id), { modifier_id: id })
-            },
-            handleAddSet(){
-                Inertia.post(route('sets.store', {log_id: this.log.id, order: this.numberOfSets + 1, weight: this.weight, reps: this.reps }))
-            },
-            beginDelete(id){
-                this.showDeleting = true
-                this.modelDeleting = id
-            },
-            handleDelete(){
-                console.log('deleting...' + this.modelDeleting)
-                Inertia.delete(route('logs.destroy', this.modelDeleting))
-                this.showDeleting = false
-                this.modelDeleting = ''
-            },
-            handleCancelDelete(){
-                this.showDeleting = false
-                this.modelDeleting = ''
-            },
-            increaseReps(n){
-                this.reps = this.reps + n
-            },
-            decreaseReps(n){
-                if (this.reps - n < 0){
-                    this.reps = 0
-                } else {
-                    this.reps = this.reps - n
-                }
-            },
-            increaseWeight(n){
-                this.weight = this.weight + n
-            },
-            decreaseWeight(n){
-                if (this.weight - n < 0){
-                    this.weight = 0
-                } else {
-                    this.weight = this.weight - n
-                }
-            }
-        },
-        computed: {
-            numberOfSets(){
-                return this.log.sets.length
-            },
-            showWeight(){
-                return !this.mods.selected['5252eab0-a9a0-11ec-a5d4-2d2b9afa987a']
+
+            return {
+                showDeleting,
+                modelDeleting,
+                mods,
+                form,
+                numberOfSets,
+                showWeight,
+                onSelect,
+                handleAddSet,
+                adjustReps,
+                adjustWeight,
+                beginDelete,
+                handleDelete,
+                handleCancelDelete
             }
         }
     })
