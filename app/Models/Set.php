@@ -62,4 +62,16 @@ class Set extends Model
     {
         return $this->belongsTo(Unit::class);
     }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('ordered', function (Builder $builder) {
+            $builder->orderBy('order', 'asc');
+        });
+    }
 }
