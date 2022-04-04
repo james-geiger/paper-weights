@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('mechanics')->nullable();
             $table->string('force')->nullable();
             $table->string('difficulty')->nullable();
+            $table->boolean('is_verified')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
