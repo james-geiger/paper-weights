@@ -48,8 +48,11 @@ Route::resource('groups', MuscleGroupController::class)->only([
 ]);
 
 Route::get('/exercise/s', [ExerciseController::class, 'search'])->name('exercise.search');
+Route::post('/exercises/add', [ExerciseController::class, 'store_quick'])->name('exercises.store.quick');
 
 Route::patch('/log/reorder', [LogController::class, 'reorder'])->name('logs.reorder');
+
+Route::patch('/log/{log}/type', [LogController::class, 'updateType'])->name('logs.update.type');
 
 Route::resource('workouts', WorkoutController::class)->names([
     'index' => 'workouts.list',
@@ -66,7 +69,7 @@ Route::resource('logs', LogController::class)->names([
 ]);
 
 Route::resource('exercises', ExerciseController::class)->names([
-    'show' => 'exercises.show'
+    'show' => 'exercises.show',
 ]);
 
 

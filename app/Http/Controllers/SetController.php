@@ -47,11 +47,17 @@ class SetController extends Controller
         // Retrieve the validated input data
         $validated = $request;
 
+        $duration = ($validated->duration_hours || $validated->duration_minutes || $validated->duration_seconds) ? ($validated->duration_hours * 60 * 60) + ($validated->duration_minutes * 60) + ($validated->duration_seconds) : null;
+
         $set = Set::create([
-            'log_id' => $request->log_id,
-            'order' => $request->order,
-            'reps' => $request->reps,
-            'weight' => $request->weight
+            'log_id' => $validated->log_id,
+            'order' => $validated->order,
+            'sets' => $validated->sets,
+            'reps' => $validated->reps,
+            'weight' => $validated->weight,
+            'duration' => $duration,
+            'distance' => $validated->distance,
+            'unit_id' => $validated->distance_unit
         ]);
 
         return back();

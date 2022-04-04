@@ -6,6 +6,8 @@ use App\Http\Requests\StoreExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
 use Illuminate\Http\Request;
 use App\Models\Exercise;
+use App\Models\Log;
+use Auth;
 
 class ExerciseController extends Controller
 {
@@ -44,6 +46,36 @@ class ExerciseController extends Controller
     public function store(StoreExerciseRequest $request)
     {
         //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreExerciseRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store_quick(StoreExerciseRequest $request)
+    {
+        // Retrieve the validated input data
+        $validated = $request;
+
+        $exercise = Exercise::create([
+            'name' => $validated->name,
+            'user_id' => Auth::user()->id,
+            'type_id' => 'acfe80a0-b16b-11ec-85d8-63abaa72c901'
+        ]);
+
+        $log = Log::create([
+            'exercise_id' => $exercise->id,
+            'workout_id' => $request->workout_id,
+            'type_id' => $exercise->type_id,
+            'order' => $request->order,
+            'user_id' => Auth::user()->id
+        ]);
+
+        return redirect()->action([LogController::class, 'show'], $log->id)->with('status', 'log-created');
+
+
     }
 
     /**
@@ -98,7 +130,10 @@ class ExerciseController extends Controller
            return [];
         }
 
-        $exercises = Exercise::search($request->q)->query(fn ($query) => $query->limit(15))->get();
+        $exercises = Exercise::search($request->q)->query(fn ($query) => $query->where(function($query) {
+            $query->where('user_id', Auth::user()->id)
+                  ->orWhereNull('user_id');
+            })->limit(15))->get();
 
         return $exercises;
     }

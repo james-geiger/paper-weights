@@ -10,14 +10,15 @@ use App\Models\Exercise;
 use App\Models\Workout;
 use App\Models\Set;
 use App\Models\Modifier;
+use App\Models\Type;
 
 class Log extends Model
 {
     use HasFactory, Uuids, SoftDeletes;
 
-    protected $with = ['exercise', 'sets', 'modifiers'];
+    protected $with = ['exercise', 'sets', 'modifiers', 'type'];
 
-    protected $fillable = ['exercise_id', 'workout_id', 'order', 'user_id'];
+    protected $fillable = ['exercise_id', 'workout_id', 'order', 'user_id', 'type_id'];
 
     /**
      * Get the workout for the log.
@@ -41,6 +42,14 @@ class Log extends Model
     public function sets()
     {
         return $this->hasMany(Set::class);
+    }
+
+    /**
+     * Get the type of logging that should be used for this exercise.
+     */
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
     }
 
     /**

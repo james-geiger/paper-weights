@@ -8,7 +8,7 @@
                 message="Are you sure you want to remove this exercise and its associated sets from this workout?"
                 title="Delete Exercise" @delete="handleDelete" @cancel="handleCancelDelete" />
             <div>
-                <search ref="searchCommand" @close="searching = !searching" @selected="handleSelected" />
+                <search ref="searchCommand" @close="searching = !searching" @selected="handleSelected" :workout_id="workout.id" :order="numberOfExercises + 1"/>
                 <div class="bg-white shadow overflow-hidden rounded-md" v-if="logs.length > 0">
                     <ul role="list" class="divide-y divide-gray-200">
                         <draggable :list="logs" tag="transition-group" handle=".handle" item-key="id" @end="handleDrop">
@@ -23,11 +23,11 @@
                                             <div class="inline-flex w-full space-x-6 text-sm text-gray-500">
                                                 <span class="inline-flex justify-center items-center">
                                                     <CollectionIcon class="h-4 w-4 mr-2" />
-                                                    {{ Math.round(element.sets_count) }}
+                                                    {{ Math.round(element.sets_sum_sets) }}
                                                 </span>
                                                 <span class="inline-flex justify-center items-center">
                                                     <HashtagIcon class="h-4 w-4 mr-2" />
-                                                    {{ Math.round(element.sets_sum_reps) }}
+                                                    {{ numberOfReps(element.sets)}}
                                                 </span>
                                                 <span class="inline-flex justify-center items-center">
                                                     <ScaleIcon class="h-4 w-4 mr-2" />
@@ -177,7 +177,6 @@
                 Inertia.delete(route('workouts.destroy', this.workout.id))
             },
             handleSelected(selected) {
-                console.log(selected.id)
                 Inertia.post(route('logs.store', {
                     exercise_id: selected.id,
                     workout_id: this.workout.id,
@@ -208,13 +207,14 @@
                 const new_order = this.logs.flatMap((e) => e.id)
                 Inertia.patch(route('logs.reorder'), {reordered_logs: new_order})
             },
-            numberOfReps(set) {
-                return _.sumBy(set, 'reps');
+            numberOfReps(set){
+                const reps = _.map(set, (e) => e.sets * e.reps)
+                return _.sum(reps)
             },
             weightVolume(set, unit) {
                 var volume = 0
                 set.forEach(e => {
-                    volume += e.reps * e.weight
+                    volume += e.sets * e.reps * e.weight
                 });
                 if (volume >= 1000) {
                     volume = volume / 1000

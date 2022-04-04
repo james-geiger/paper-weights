@@ -27,7 +27,15 @@ class StoreSetRequest extends FormRequest
             'log_id' => 'required|uuid',
             'order' => 'required|numeric',
             'reps' => 'required|numeric',
-            'weight' => 'present'
+            'weight' => 'nullable|numeric',
+            'sets' => 'required|numeric',
+            'reps' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
+            'duration_hours' => 'nullable|numeric',
+            'duration_minutes' => 'nullable|numeric',
+            'duration_seconds' => 'nullable|numeric',
+            'distance' => 'nullable|numeric',
+            'distance_unit' => 'required_with:distance|uuid'
         ];
     }
 }

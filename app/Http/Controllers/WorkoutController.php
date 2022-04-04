@@ -74,7 +74,7 @@ class WorkoutController extends Controller
      */
     public function show(Workout $workout)
     {
-        $logs = $workout->logs->loadCount('sets')->loadSum('sets', 'reps')->sortBy([
+        $logs = $workout->logs->loadSum('sets', 'sets')->loadSum('sets', 'reps')->sortBy([
             ['order', 'asc']
         ]);
 
@@ -89,9 +89,10 @@ class WorkoutController extends Controller
             ->groupBy('muscle_groups.name', 'muscles.name', 'exercise_muscle.type')
             ->selectRaw(
                 'COUNT(DISTINCT(logs.id)) as count,
-                SUM(sets.weight * sets.reps) as total_volume,
+                SUM(sets.weight * sets.reps * sets.sets) as total_volume,
+                SUM(sets.sets) as total_sets,
                 SUM(sets.weight) as total_weight,
-                SUM(sets.reps) as total_reps,
+                SUM(sets.reps * sets.sets) as total_reps,
                 muscle_groups.name AS group_name,
                 muscles.name,
                 exercise_muscle.type'

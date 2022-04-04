@@ -13,7 +13,7 @@ class StoreexerciseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class StoreexerciseRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string',
+            'workout_id' => 'nullable|uuid',
+            'order' => 'nullable|numeric'
         ];
     }
 }

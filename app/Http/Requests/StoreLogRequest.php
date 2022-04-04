@@ -26,7 +26,7 @@ class StoreLogRequest extends FormRequest
         return [
             'exercise_id' => 'required|uuid',
             'workout_id' => 'required|uuid',
-           'order' => 'required|numeric'
+            'order' => 'required|numeric'
         ];
     }
 }

@@ -12,12 +12,21 @@ use Laravel\Scout\Attributes\SearchUsingPrefix;
 
 use App\Traits\Uuids;
 use App\Models\Muscle;
+use App\Models\Type;
+
+use Auth;
 
 class Exercise extends Model
 {
     use HasFactory, Uuids, Searchable, SoftDeletes;
 
+    protected $fillable = ['user_id', 'type_id', 'name', 'force', 'mechanics', 'difficulty'];
+
     protected $with = ['equipment', 'muscles'];
+
+    protected $casts = [
+        'is_verified' => 'boolean'
+    ];
 
     /**
      * Get the equipment associated with the exercise.
@@ -36,6 +45,14 @@ class Exercise extends Model
     }
 
     /**
+     * Get the default type of logging that should be used for this exercise.
+     */
+    public function default_type()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
+    /**
      * Get the indexable data array for the model.
      *
      * @return array
@@ -49,6 +66,17 @@ class Exercise extends Model
             'force' => $this->force,
             'difficulty' => $this->difficulty
         ];
+    }
+
+    /**
+     * Scope the query to only include the user's workouts.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeAuthUser($query)
+    {
+        return $query->where('user_id', Auth::user()->id);
     }
 
 }

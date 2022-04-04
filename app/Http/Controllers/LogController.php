@@ -7,6 +7,9 @@ use App\Http\Requests\UpdateLogRequest;
 use Illuminate\Http\Request;
 use App\Models\Log;
 use App\Models\Modifier;
+use App\Models\Exercise;
+use App\Models\Unit;
+use App\Models\Type;
 
 use Illuminate\Support\Facades\Log as Logger;
 
@@ -55,9 +58,12 @@ class LogController extends Controller
         // Retrieve the validated input data
         $validated = $request;
 
+        $exercise = Exercise::find($request->exercise_id);
+
         $log = Log::create([
-            'exercise_id' => $request->exercise_id,
+            'exercise_id' => $exercise->id,
             'workout_id' => $request->workout_id,
+            'type_id' => $exercise->type_id,
             'order' => $request->order,
             'user_id' => Auth::user()->id
         ]);
@@ -74,6 +80,9 @@ class LogController extends Controller
      */
     public function show(Log $log)
     {
+
+        $units = Unit::all();
+        $types = Type::Ordered()->get();
 
         $log->loadCount('sets');
         $log->loadSum('sets', 'reps');
@@ -92,7 +101,7 @@ class LogController extends Controller
                         ->limit(1)
                         ->get();
 
-        return Inertia::render('Log/Show', ['workout' => $workout, 'log' => $log, 'last_log' => $last_log, 'modifiers' => $modifiers]);
+        return Inertia::render('Log/Show', ['workout' => $workout, 'log' => $log, 'last_log' => $last_log, 'modifiers' => $modifiers, 'units' => $units, 'types' => $types]);
 
     }
 
@@ -132,14 +141,23 @@ class LogController extends Controller
         $logs = $request->reordered_logs;
 
         foreach ($logs as $key => $log) {
-            Logger::debug($key);
-            Logger::debug($log);
             $l = Log::find($log);
             $l->order = $key + 1;
             $l->save();
         }
 
         return back()->with('status', 'log-modifier-updated');
+    }
+
+    public function updateType(Request $request, Log $log)
+    {
+        $log->type_id = $request->type['id'];
+
+        $log->save();
+
+        $log->sets()->delete();
+
+        return redirect()->action([LogController::class, 'show'], $log->id)->with('status', 'log-type-updated');
     }
 
     /**
