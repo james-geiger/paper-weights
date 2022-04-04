@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Uuids;
 
@@ -15,14 +16,15 @@ class Type extends Model
     ];
 
     /**
-     * Scope the query to return workouts in newest to oldest order.
+     * The "booted" method of the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return void
      */
-    public function scopeOrdered($query)
+    protected static function booted()
     {
-        return $query->orderBy('order', 'asc');
+        static::addGlobalScope('ordered', function (Builder $builder) {
+            $builder->orderBy('order', 'asc');
+        });
     }
 
 }

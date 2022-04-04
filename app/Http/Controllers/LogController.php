@@ -82,7 +82,7 @@ class LogController extends Controller
     {
 
         $units = Unit::all();
-        $types = Type::Ordered()->get();
+        $types = Type::all();
 
         $log->loadCount('sets');
         $log->loadSum('sets', 'reps');

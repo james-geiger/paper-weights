@@ -91,7 +91,7 @@
                     <label for="distance_unit" class="sr-only">Distance Unit</label>
                     <select v-model="form.distance_unit" id="distance_unit" name="distance_unit" class="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
                         <option selected disabled>unit</option>
-                        <option v-for="unit in units" :key="unit.id" :value="unit.id">{{ unit.abbreviation }}</option>
+                        <option v-for="unit in units" :key="unit.id" :value="unit.id">{{ unit.name }}</option>
                     </select>
                 </div>
                 </div>
