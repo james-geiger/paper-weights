@@ -17,7 +17,7 @@ class Workout extends Model
 {
     use HasFactory, Uuids, SoftDeletes;
 
-    protected $fillable = ['user_id', 'name', 'date'];
+    protected $fillable = ['user_id', 'name', 'date', 'time'];
 
     protected $appends = ['human_readable_date', 'human_readable_time'];
 

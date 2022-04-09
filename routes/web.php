@@ -26,7 +26,7 @@ use App\Http\Controllers\WorkoutController;
 
 Route::get('/', function () {
     return redirect(RouteServiceProvider::HOME);
-});
+})->name('dashboard');
 
 Route::resources([
     'workouts' => WorkoutController::class,

@@ -10,6 +10,7 @@ use App\Models\Modifier;
 use App\Models\Exercise;
 use App\Models\Unit;
 use App\Models\Type;
+use App\Models\Set;
 
 use Illuminate\Support\Facades\Log as Logger;
 
@@ -78,8 +79,12 @@ class LogController extends Controller
      * @param  \App\Models\Log  $Log
      * @return \Illuminate\Http\Response
      */
-    public function show(Log $log)
+    public function show(Request $request, Log $log)
     {
+
+        if ($request->user()->cannot('view', $log)) {
+            abort(403);
+        }
 
         $units = Unit::all();
         $types = Type::all();
@@ -91,6 +96,14 @@ class LogController extends Controller
 
         $workout = $log->workout;
 
+        $prev_log = Log::where('workout_id', $log->workout_id)->where('order', $log->order - 1)->first();
+        $next_log = Log::where('workout_id', $log->workout_id)->where('order', $log->order + 1)->first();
+
+        $page = [
+            'prev' => ($prev_log) ? route('logs.show', ['log' => $prev_log->id]) : null,
+            'next' => ($next_log) ? route('logs.show', ['log' => $next_log->id]) : null,
+        ];
+
         $last_log = Log::with('workout')
                         ->where('exercise_id', $log->exercise->id)
                         ->where('id', '<>', $log->id)
@@ -101,7 +114,35 @@ class LogController extends Controller
                         ->limit(1)
                         ->get();
 
-        return Inertia::render('Log/Show', ['workout' => $workout, 'log' => $log, 'last_log' => $last_log, 'modifiers' => $modifiers, 'units' => $units, 'types' => $types]);
+        $one_rep_max = Set::join('logs', 'sets.log_id', '=', 'logs.id')
+                        ->select(\DB::raw('(weight / ( 1.0278-0.0278 * reps )) as one_rep_max'))
+                        ->where('exercise_id', $log->exercise_id)
+                        ->withoutGlobalScopes()
+                        ->orderBy('weight', 'desc')
+                        ->orderBy('reps', 'asc')
+                        ->limit(1)
+                        ->get()
+                        ->first()
+                        ->only('one_rep_max')['one_rep_max'];
+
+        $arr = [
+            '60' => round($one_rep_max*0.6),
+            '70' => round($one_rep_max*0.7),
+            '80' => round($one_rep_max*0.8),
+            '90' => round($one_rep_max*0.9),
+            'one_rep_max' => round($one_rep_max*1)
+        ];
+
+        return Inertia::render('Log/Show', [
+            'workout' => $workout,
+            'log' => $log,
+            'pagination' => $page,
+            'last_log' => $last_log,
+            'modifiers' => $modifiers,
+            'units' => $units,
+            'types' => $types,
+            'one_rep_max' => $arr
+        ]);
 
     }
 
@@ -138,6 +179,7 @@ class LogController extends Controller
      */
     public function reorder(Request $request)
     {
+
         $logs = $request->reordered_logs;
 
         foreach ($logs as $key => $log) {
@@ -151,6 +193,10 @@ class LogController extends Controller
 
     public function updateType(Request $request, Log $log)
     {
+        if ($request->user()->cannot('view', $log)) {
+            abort(403);
+        }
+
         $log->type_id = $request->type['id'];
 
         $log->save();
@@ -166,8 +212,12 @@ class LogController extends Controller
      * @param  \App\Models\Log  $Log
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Log $log)
+    public function destroy(Request $request, Log $log)
     {
+        if ($request->user()->cannot('delete', $log)) {
+            abort(403);
+        }
+
         $log->sets()->delete();
         $log->delete();
 

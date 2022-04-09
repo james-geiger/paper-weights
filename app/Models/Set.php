@@ -14,7 +14,7 @@ class Set extends Model
 {
     use HasFactory, Uuids, SoftDeletes;
 
-    protected $fillable = ['log_id', 'order', 'sets', 'reps', 'weight', 'weight_assisted', 'duration', 'distance', 'unit_id'];
+    protected $fillable = ['log_id', 'order', 'sets', 'reps', 'weight', 'weight_added', 'weight_assisted', 'duration', 'distance', 'unit_id'];
 
     protected $casts = [
         'reps' => 'float',

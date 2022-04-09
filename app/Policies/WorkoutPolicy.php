@@ -18,7 +18,7 @@ class WorkoutPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -28,9 +28,9 @@ class WorkoutPolicy
      * @param  \App\Models\Workout  $Workout
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Workout $Workout)
+    public function view(User $user, Workout $workout)
     {
-        //
+        return $user->id === $workout->user_id;
     }
 
     /**
@@ -41,7 +41,7 @@ class WorkoutPolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -51,9 +51,9 @@ class WorkoutPolicy
      * @param  \App\Models\Workout  $Workout
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Workout $Workout)
+    public function update(User $user, Workout $workout)
     {
-        //
+        return $user->id === $workout->user_id;
     }
 
     /**
@@ -63,9 +63,9 @@ class WorkoutPolicy
      * @param  \App\Models\Workout  $Workout
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Workout $Workout)
+    public function delete(User $user, Workout $workout)
     {
-        //
+        return $user->id === $workout->user_id;
     }
 
     /**

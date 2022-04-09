@@ -8,7 +8,7 @@
                 message="Are you sure you want to remove this exercise and its associated sets from this workout?"
                 title="Delete Exercise" @delete="handleDelete" @cancel="handleCancelDelete" />
             <div>
-                <search ref="searchCommand" @close="searching = !searching" @selected="handleSelected" :workout_id="workout.id" :order="numberOfExercises + 1"/>
+                <search ref="searchCommand" @close="searching = !searching" :workout_id="workout.id" :order="numberOfExercises + 1"/>
                 <div class="bg-white shadow overflow-hidden rounded-md" v-if="logs.length > 0">
                     <ul role="list" class="divide-y divide-gray-200">
                         <draggable :list="logs" tag="transition-group" handle=".handle" item-key="id" @end="handleDrop">
@@ -22,11 +22,11 @@
                                             </p>
                                             <div class="inline-flex w-full space-x-6 text-sm text-gray-500">
                                                 <span class="inline-flex justify-center items-center">
-                                                    <CollectionIcon class="h-4 w-4 mr-2" />
+                                                    <HashtagIcon class="h-4 w-4 mr-2" />
                                                     {{ Math.round(element.sets_sum_sets) }}
                                                 </span>
                                                 <span class="inline-flex justify-center items-center">
-                                                    <HashtagIcon class="h-4 w-4 mr-2" />
+                                                    <CollectionIcon class="h-4 w-4 mr-2" />
                                                     {{ numberOfReps(element.sets)}}
                                                 </span>
                                                 <span class="inline-flex justify-center items-center">
@@ -175,13 +175,6 @@
         methods: {
             discard() {
                 Inertia.delete(route('workouts.destroy', this.workout.id))
-            },
-            handleSelected(selected) {
-                Inertia.post(route('logs.store', {
-                    exercise_id: selected.id,
-                    workout_id: this.workout.id,
-                    order: this.numberOfExercises + 1
-                }))
             },
             beginDelete(id) {
                 this.showDeleting = true

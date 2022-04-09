@@ -132,7 +132,7 @@ class WorkoutController extends Controller
 
         $workout->save();
 
-        return back()->with('status', 'workout-updated');
+        return redirect()->action([WorkoutController::class, 'show'], $workout->id)->with('status', 'workout-updated');
     }
 
     /**

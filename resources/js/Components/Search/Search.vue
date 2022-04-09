@@ -58,6 +58,7 @@ import { ref, watch } from 'vue'
 import { SearchIcon } from '@heroicons/vue/solid'
 import { CogIcon, BadgeCheckIcon } from '@heroicons/vue/outline'
 import { useForm } from '@inertiajs/inertia-vue3'
+import { Inertia } from '@inertiajs/inertia'
 import {
   Combobox,
   ComboboxInput,
@@ -95,8 +96,13 @@ export default {
     const query = ref('')
     const filteredResults = ref([])
 
-    const onSelect = (exercise) => {
-        context.emit('selected', exercise)
+    const onSelect = (selected) => {
+        console.log(selected)
+        Inertia.post(route('logs.store', {
+            exercise_id: selected.id,
+            workout_id: props.workout_id,
+            order: props.order
+        }))
     }
 
     const openSearch = () => {

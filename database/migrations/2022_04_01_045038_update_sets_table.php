@@ -21,6 +21,7 @@ return new class extends Migration
 
         Schema::table('sets', function (Blueprint $table) {
             $table->after('weight', function ($table) {
+                $table->decimal('weight_added', 16, 2)->nullable();
                 $table->decimal('weight_assisted', 16, 2)->nullable();
                 $table->decimal('duration', 16, 2)->nullable();
                 $table->decimal('distance', 16, 2)->nullable();

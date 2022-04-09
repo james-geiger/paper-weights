@@ -1,7 +1,7 @@
 <template>
     <app-layout title="Exercise Log">
         <template #header>
-            <show-header :workout="workout" :log='log' @discard="beginDelete" />
+            <show-header :workout="workout" :log='log' @discard="beginDelete" :pagination="pagination" />
         </template>
         <template #main>
         <div class="px-6 py-6">
@@ -65,6 +65,24 @@
                     </button>
                 </div>
             </div>
+            <div class="mt-4" v-if="visibleColumns.weight_added">
+                <label for="weight_added" class="block text-sm font-medium text-gray-700">Additional Weight Used</label>
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <button type="button" @click="adjustWeightAdded(-5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-l-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                        <ChevronDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    </button>
+                    <button type="button" @click="adjustWeightAdded(-10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-none text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                        <span>10</span>
+                    </button>
+                    <input type="number" pattern="\d*" v-model="form.weight_added" name="weight_added" id="weight_added" class="-ml-px z-10 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none sm:text-sm border-gray-300 text-center" min=0 />
+                    <button type="button" @click="adjustWeightAdded(10)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                        <span>10</span>
+                    </button>
+                    <button type="button" @click="adjustWeightAdded(5)" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                        <ChevronUpIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    </button>
+                </div>
+            </div>
             <div class="mt-4" v-if="visibleColumns.weight_assisted">
                 <label for="weight_assisted" class="block text-sm font-medium text-gray-700">Assisted Weight Used</label>
                 <div class="mt-1 flex rounded-md shadow-sm">
@@ -90,7 +108,7 @@
                 <div class="absolute inset-y-0 right-0 flex items-center">
                     <label for="distance_unit" class="sr-only">Distance Unit</label>
                     <select v-model="form.distance_unit" id="distance_unit" name="distance_unit" class="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md">
-                        <option selected disabled>unit</option>
+                        <option disabled :value="undefined">unit</option>
                         <option v-for="unit in units" :key="unit.id" :value="unit.id">{{ unit.name }}</option>
                     </select>
                 </div>
@@ -164,6 +182,20 @@
                                 <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight) }}<span class="text-gray-500">lbs</span></span>
                                 <span class="font-medium text-gray-900">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span>&nbsp;{{ set.human_readable_duration }}</span>
                             </span>
+                            <span v-if="set.weight_added && set.reps">
+                                <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight_added) }}<span class="text-gray-500">lbs (additional)</span></span>
+                                <span class="font-medium text-gray-900">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span>&nbsp;{{ set.reps }}</span>
+                            </span>
+                            <span v-if="set.weight_assisted && set.reps">
+                                <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight_assisted) }}<span class="text-gray-500">lbs (assisted)</span></span>
+                                <span class="font-medium text-gray-900">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span>&nbsp;{{ set.reps }}</span>
+                            </span>
+                            <span v-if="set.weight && set.distance">
+                                <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight) }}<span class="text-gray-500">lbs</span></span>
+                                <span class="font-medium text-gray-900 mr-1">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span></span>
+                                <span class="font-medium text-gray-900 mr-2">{{ set.distance }}&nbsp;<span class="text-gray-500">{{ set.unit.abbreviation }}</span></span>
+                                <span class="font-medium text-gray-900">{{ set.human_readable_duration }}</span>
+                            </span>
                             <span v-if="set.duration && set.distance">
                                 <span class="font-medium text-gray-900 mr-1">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span></span>
                                 <span class="font-medium text-gray-900 mr-2">{{ set.distance }}&nbsp;<span class="text-gray-500">{{ set.unit.abbreviation }}</span></span>
@@ -210,7 +242,7 @@
     import WarningAlert from '@/Components/Modal/WarningAlert.vue'
 
     export default defineComponent({
-        props: ['workout', 'log', 'last_log', 'modifiers', 'units', 'types'],
+        props: ['workout', 'log', 'pagination', 'last_log', 'modifiers', 'units', 'types', 'one_rep_max'],
         components: {
             AppLayout,
             ShowHeader,
@@ -235,6 +267,7 @@
             ListboxOptions
         },
         setup (props) {
+            const searching = ref(false)
             const showDeleting = ref(false)
             const showWarning = ref(false)
             const modelDeleting = ref('')
@@ -248,6 +281,7 @@
                 reps: null,
                 weight: null,
                 weight_assisted: null,
+                weight_added: null,
                 duration_hours: null,
                 duration_minutes: null,
                 duration_seconds: null,
@@ -280,19 +314,30 @@
 
             const adjustWeightAssisted = (n) => ((form.weight_assisted + n < 0) ? form.weight_assisted = 0 : form.weight_assisted += n)
 
-            const beginChangeType = () => (showWarning.value = true)
+            const adjustWeightAdded = (n) => ((form.weight_added + n < 0) ? form.weight_added = 0 : form.weight_added += n)
+
+            const beginChangeType = () => ((numberOfSets.value > 0) ? showWarning.value = true : handleChangeType())
 
             const handleChangeType = () => {
                 logForm.patch(route('logs.update.type', props.log.id), {
                     onSuccess: ()=> {
                         updateVisibleColumns()
                         showWarning.value = false
+                        form.sets = 1,
+                        form.reps = null,
+                        form.weight = null,
+                        form.weight_added = null,
+                        form.weight_assisted = null,
+                        form.duration_hours = null,
+                        form.duration_minutes = null,
+                        form.duration_seconds = null,
+                        form.distance = null,
+                        form.distance_unit = undefined
                     }
                 })
             }
 
             const handleCancelChangeType = () => (showWarning.value = true)
-
 
             const beginDelete = () => {
                 showDeleting.value = true,
@@ -320,6 +365,7 @@
             });
 
             return {
+                searching,
                 showDeleting,
                 showWarning,
                 modelDeleting,
@@ -336,6 +382,7 @@
                 adjustSets,
                 adjustReps,
                 adjustWeight,
+                adjustWeightAdded,
                 adjustWeightAssisted,
                 beginDelete,
                 handleDelete,

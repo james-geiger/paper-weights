@@ -18,7 +18,7 @@ class LogPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -28,9 +28,9 @@ class LogPolicy
      * @param  \App\Models\Log  $Log
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Log $Log)
+    public function view(User $user, Log $log)
     {
-        //
+        return $user->id === $log->user_id;
     }
 
     /**
@@ -51,9 +51,9 @@ class LogPolicy
      * @param  \App\Models\Log  $Log
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Log $Log)
+    public function update(User $user, Log $log)
     {
-        //
+        return $user->id === $log->user_id;
     }
 
     /**
@@ -63,9 +63,9 @@ class LogPolicy
      * @param  \App\Models\Log  $Log
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Log $Log)
+    public function delete(User $user, Log $log)
     {
-        //
+        return $user->id === $log->user_id;
     }
 
     /**
@@ -75,7 +75,7 @@ class LogPolicy
      * @param  \App\Models\Log  $Log
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Log $Log)
+    public function restore(User $user, Log $log)
     {
         //
     }
@@ -87,7 +87,7 @@ class LogPolicy
      * @param  \App\Models\Log  $Log
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Log $Log)
+    public function forceDelete(User $user, Log $log)
     {
         //
     }
