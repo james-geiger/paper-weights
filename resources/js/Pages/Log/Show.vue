@@ -4,7 +4,7 @@
             <show-header :workout="workout" :log='log' @discard="beginDelete" :pagination="pagination" />
         </template>
         <template #main class="overflow-visible">
-        <div class="px-6 py-6">
+        <div class="px-4 py-6">
         <div class="">
             <div class="border-b border-b-slate-300 pb-6 mb-6">
                 <Listbox as="div" v-model="logForm.type" @update:modelValue="beginChangeType" class="z-20">
