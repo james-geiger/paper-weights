@@ -1,4 +1,4 @@
-<p align="center"><a href="https://paperweights.io" target="_blank"><img src="https://raw.githubusercontent.com/james-geiger/paper-weights/art/main/paperweights-white-lockout.png" width="600"></a></p>
+<p align="center"><a href="https://paperweights.io" target="_blank"><img src="https://raw.githubusercontent.com/james-geiger/paper-weights/main/art/paperweights-white-lockout.png" width="600"></a></p>
 
 ## About Paper Weights
 
