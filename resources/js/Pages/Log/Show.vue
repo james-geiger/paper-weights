@@ -269,7 +269,7 @@
                     <div class="pb-5 border-b border-gray-200">
                         <h3 class="text-lg leading-6 font-medium text-gray-900">Intensity Insights</h3>
                     </div>
-                    <ul role="list" class="" v-if="one_rep_max.length > 0">
+                    <ul role="list" class="">
                         <li v-for="(value, index) in one_rep_max" :key="index" class="py-4">
                             <div class="ml-3 flex flex-row">
                                 <p class="text-sm text-gray-900">{{ value }} lbs</p>
@@ -277,7 +277,7 @@
                             </div>
                         </li>
                     </ul>
-                    <p class="mt-4 text-gray-600" v-else>No insights are available for this exercise.</p>
+                    <!--<p class="mt-4 text-gray-600" v-else>No insights are available for this exercise.</p>-->
                 </div>
             </div>
         </template>
