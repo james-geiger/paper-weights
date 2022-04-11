@@ -117,21 +117,28 @@ class LogController extends Controller
         $one_rep_max = Set::join('logs', 'sets.log_id', '=', 'logs.id')
                         ->select(\DB::raw('(weight / ( 1.0278-0.0278 * reps )) as one_rep_max'))
                         ->where('exercise_id', $log->exercise_id)
+                        ->where('user_id', $request->user()->id)
+                        ->whereNotNull('weight')
+                        ->whereNotNull('reps')
                         ->withoutGlobalScopes()
                         ->orderBy('weight', 'desc')
                         ->orderBy('reps', 'asc')
                         ->limit(1)
                         ->get()
-                        ->first()
-                        ->only('one_rep_max')['one_rep_max'];
+                        ->first();
 
-        $arr = [
-            '60' => round($one_rep_max*0.6),
-            '70' => round($one_rep_max*0.7),
-            '80' => round($one_rep_max*0.8),
-            '90' => round($one_rep_max*0.9),
-            'one_rep_max' => round($one_rep_max*1)
-        ];
+        $arr = [];
+
+        if ($one_rep_max) {
+            $one_rep_max = $one_rep_max->only('one_rep_max')['one_rep_max'];
+            $arr = [
+                '60%' => round($one_rep_max*0.6),
+                '70%' => round($one_rep_max*0.7),
+                '80%' => round($one_rep_max*0.8),
+                '90%' => round($one_rep_max*0.9),
+                '1RM' => round($one_rep_max*1)
+            ];
+        }
 
         return Inertia::render('Log/Show', [
             'workout' => $workout,

@@ -3,7 +3,7 @@
         <template #header>
             <show-header :workout="workout" :log='log' @discard="beginDelete" :pagination="pagination" />
         </template>
-        <template #main>
+        <template #main class="overflow-visible">
         <div class="px-6 py-6">
         <div class="">
             <div class="border-b border-b-slate-300 pb-6 mb-6">
@@ -165,13 +165,69 @@
                 </button>
             </div>
         </div>
-        <div class="mt-6">
-            <div class="pb-5 border-b border-gray-200">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">This Workout</h3>
-            </div>
-            <ul role="list" class="divide-y divide-gray-200">
-                <li v-for="set in log.sets" :key="set.id" class="py-4 flex">
+        <delete-alert :open="showDeleting" message="Are you sure you want to remove this exercise and its associated sets from this workout?" title="Delete Exercise" @delete="handleDelete" @cancel="handleCancelDelete"/>
+        <warning-alert :open="showWarning" message="Are you sure you want to change the type of loging being used for this exercise? Any sets you've logged for this workout will be removed." title="Change Logging Type" @confirm="handleChangeType" @cancel="handleCancelChangeType"/>
+        </div>
+        </template>
+        <template #right>
+            <div class="rounded-lg bg-white overflow-hidden shadow">
+                <div class="px-6 py-6">
+                    <div class="pb-5 border-b border-gray-200">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Log - This Workout</h3>
+                    </div>
+                    <ul role="list" class="divide-y divide-gray-200" v-if="log.sets.length > 0">
+                <li v-for="set in log.sets" :key="set.id" class="py-4 flex justify-between">
                     <div class="ml-3">
+                        <p class="text-sm">
+                            <span class="font-medium text-gray-900 mr-2">{{ set.order }}.</span>
+                            <span v-if="set.weight && set.reps">
+                                <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight) }}<span class="text-gray-500">lbs</span></span>
+                                <span class="font-medium text-gray-900">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span>&nbsp;{{ set.reps }}</span>
+                            </span>
+                            <span v-if="set.weight && set.duration">
+                                <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight) }}<span class="text-gray-500">lbs</span></span>
+                                <span class="font-medium text-gray-900">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span>&nbsp;{{ set.human_readable_duration }}</span>
+                            </span>
+                            <span v-if="set.weight_added && set.reps">
+                                <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight_added) }}<span class="text-gray-500">lbs (additional)</span></span>
+                                <span class="font-medium text-gray-900">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span>&nbsp;{{ set.reps }}</span>
+                            </span>
+                            <span v-if="set.weight_assisted && set.reps">
+                                <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight_assisted) }}<span class="text-gray-500">lbs (assisted)</span></span>
+                                <span class="font-medium text-gray-900">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span>&nbsp;{{ set.reps }}</span>
+                            </span>
+                            <span v-if="set.weight && set.distance">
+                                <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight) }}<span class="text-gray-500">lbs</span></span>
+                                <span class="font-medium text-gray-900 mr-1">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span></span>
+                                <span class="font-medium text-gray-900 mr-2">{{ set.distance }}&nbsp;<span class="text-gray-500">{{ set.unit.abbreviation }}</span></span>
+                                <span class="font-medium text-gray-900">{{ set.human_readable_duration }}</span>
+                            </span>
+                            <span v-if="set.duration && set.distance">
+                                <span class="font-medium text-gray-900 mr-1">{{ set.sets }}&nbsp;<span class="text-gray-500">x</span></span>
+                                <span class="font-medium text-gray-900 mr-2">{{ set.distance }}&nbsp;<span class="text-gray-500">{{ set.unit.abbreviation }}</span></span>
+                                <span class="font-medium text-gray-900">{{ set.human_readable_duration }}</span>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="inline-flex">
+                        <p class="text-sm text-red-600 mr-2" v-if="setDeleting == set.id">Are you sure?  Again to delete, or <span class="text-gray-600 underline cursor-pointer" @click="handleCancelSetDelete">cancel.</span></p>
+                        <button type="button" @click="handleSetDelete(set.id)" class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
+                            <TrashIcon class="h-5 w-5" />
+                        </button>
+                    </div>
+                </li>
+            </ul>
+            <p class="mt-4 text-gray-600" v-else>You haven't logged any sets for this exercise.</p>
+                </div>
+            </div>
+            <div class="rounded-lg bg-white overflow-hidden shadow mt-6">
+            <div class="px-6 py-6">
+                <div class="pb-5 border-b border-gray-200">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Log - Last Workout</h3>
+                </div>
+                <ul role="list" class="divide-y divide-gray-200" v-if="last_log.length > 0">
+                <li v-for="set in last_log[0].sets" :key="set.id" class="py-4 flex">
+                <div class="ml-3">
                         <p class="text-sm">
                             <span class="font-medium text-gray-900 mr-2">{{ set.order }}.</span>
                             <span v-if="set.weight && set.reps">
@@ -205,24 +261,24 @@
                     </div>
                 </li>
             </ul>
-        </div>
-        <delete-alert :open="showDeleting" message="Are you sure you want to remove this exercise and its associated sets from this workout?" title="Delete Exercise" @delete="handleDelete" @cancel="handleCancelDelete"/>
-        <warning-alert :open="showWarning" message="Are you sure you want to change the type of loging being used for this exercise? Any sets you've logged for this workout will be removed." title="Change Logging Type" @confirm="handleChangeType" @cancel="handleCancelChangeType"/>
-        </div>
-        </template>
-        <template #right>
-            <div class="px-6 py-6">
-                <div class="pb-5 border-b border-gray-200">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Past Workout Insights</h3>
+            <p class="mt-4 text-gray-600" v-else>No prior sets have been logged for this exercise.</p>
+            </div>
+            </div>
+            <div class="rounded-lg bg-white overflow-hidden shadow mt-6">
+                <div class="px-6 py-6">
+                    <div class="pb-5 border-b border-gray-200">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Intensity Insights</h3>
+                    </div>
+                    <ul role="list" class="" v-if="one_rep_max.length > 0">
+                        <li v-for="(value, index) in one_rep_max" :key="index" class="py-4">
+                            <div class="ml-3 flex flex-row">
+                                <p class="text-sm text-gray-900">{{ value }} lbs</p>
+                                <p class="text-sm font-medium text-gray-500">&nbsp;-&nbsp;{{ index }}</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <p class="mt-4 text-gray-600" v-else>No insights are available for this exercise.</p>
                 </div>
-                <ul role="list" class="divide-y divide-gray-200" v-if="last_log.length > 0">
-                <li v-for="set in last_log[0].sets" :key="set.id" class="py-4 flex">
-                <div class="ml-3">
-                    <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.weight) }}</span>&nbsp;<span class="text-gray-500">lbs</span></p>
-                    <p class="text-sm"><span class="font-medium text-gray-900">{{ Math.round(set.reps) }}</span>&nbsp;<span class="text-gray-500">Reps</span></p>                </div>
-                </li>
-            </ul>
-            <span class="ml-2" v-else>No prior workouts have been logged for this exercise.</span>
             </div>
         </template>
     </app-layout>
@@ -234,7 +290,7 @@
     import { Inertia } from '@inertiajs/inertia'
     import { useForm } from '@inertiajs/inertia-vue3'
     import { defineComponent, ref, reactive, computed, onMounted, watch } from 'vue'
-    import { Switch, SwitchGroup, SwitchLabel, Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
+    import { Switch, SwitchGroup, SwitchLabel, Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions, Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
     import AppLayout from '@/Layouts/TwoColumnLayout.vue'
     import ShowHeader from '@/Components/Log/ShowHeader.vue'
     import Search from '@/Components/Search/Search.vue'
@@ -264,12 +320,16 @@
             ListboxButton,
             ListboxLabel,
             ListboxOption,
-            ListboxOptions
+            ListboxOptions,
+            Popover,
+            PopoverButton,
+            PopoverPanel
         },
         setup (props) {
             const searching = ref(false)
             const showDeleting = ref(false)
             const showWarning = ref(false)
+            const setDeleting = ref('')
             const modelDeleting = ref('')
             const mods = reactive({ selected: {} })
             const visibleColumns = reactive({})
@@ -353,6 +413,12 @@
                 modelDeleting.value = ''
             }
 
+            const handleSetDelete = (id) => {
+                (setDeleting.value == id) ? Inertia.delete(route('sets.destroy', id)): setDeleting.value = id
+            }
+
+            const handleCancelSetDelete = () => setDeleting.value = ''
+
             const updateVisibleColumns = () => {
                 props.log.type.columns.forEach((e) => { visibleColumns[e.column_name]= e.active })
             }
@@ -369,6 +435,7 @@
                 showDeleting,
                 showWarning,
                 modelDeleting,
+                setDeleting,
                 mods,
                 form,
                 logForm,
@@ -379,6 +446,7 @@
                 handleCancelChangeType,
                 onSelect,
                 handleAddSet,
+                handleCancelSetDelete,
                 adjustSets,
                 adjustReps,
                 adjustWeight,
@@ -387,6 +455,7 @@
                 beginDelete,
                 handleDelete,
                 handleCancelDelete,
+                handleSetDelete,
                 updateVisibleColumns
             }
         }

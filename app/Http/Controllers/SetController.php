@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSetRequest;
 use App\Http\Requests\UpdateSetRequest;
 use App\Models\Set;
-use Illuminate\Support\Facades\Log as Logger;
-
 use App\Http\Controllers\LogController;
+use Illuminate\Support\Facades\Log as Logger;
 
 class SetController extends Controller
 {
@@ -125,6 +124,9 @@ class SetController extends Controller
      */
     public function destroy(Set $set)
     {
-        //
+        $set->delete();
+
+        return redirect()->action([LogController::class, 'show'], $set->log_id);
+
     }
 }

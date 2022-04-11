@@ -68,6 +68,10 @@ Route::resource('logs', LogController::class)->names([
     'destroy' => 'logs.destroy'
 ]);
 
+Route::resource('sets', SetController::class)->names([
+    'destroy' => 'sets.destroy'
+]);
+
 Route::resource('exercises', ExerciseController::class)->names([
     'show' => 'exercises.show',
 ]);

@@ -73,6 +73,7 @@
             </div>
         </template>
         <template #right>
+            <div class="rounded-lg bg-white overflow-hidden shadow">
             <div class="p-6">
                 <div class="pb-5">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">Workout Insights</h3>
@@ -102,6 +103,7 @@
                         </ul>
                     </div>
                 </div>
+            </div>
             </div>
         </template>
     </app-layout>
