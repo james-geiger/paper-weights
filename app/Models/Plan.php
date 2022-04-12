@@ -19,4 +19,26 @@ class Plan extends Model
     {
         return $this->morphMany(Log::class, 'loggable');
     }
+
+    /**
+     * Scope the query to only include the user's workout plans.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeAuthUser($query)
+    {
+        return $query->where('user_id', Auth::user()->id);
+    }
+
+    /**
+     * Scope the query to return workout plans in newest to oldest order.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeNewest($query)
+    {
+        return $query->orderBy('date', 'desc');
+    }
 }

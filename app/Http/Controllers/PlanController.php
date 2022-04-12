@@ -8,6 +8,12 @@ use App\Models\Plan;
 
 class PlanController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +21,9 @@ class PlanController extends Controller
      */
     public function index()
     {
-        //
+        $plans = Plan::AuthUser()->newest()->get();
+
+        return Inertia::render('Plan/Index', ['plans' => $plans]);
     }
 
     /**

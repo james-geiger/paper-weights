@@ -86,6 +86,7 @@ import { Link } from '@inertiajs/inertia-vue3';
 const navigation = [
   { name: 'Workouts', href: route('workouts.list'), current: route().current('workouts.*') || route().current('logs.*') },
   { name: 'Exercises', href: '#', current: false },
+  { name: 'Plans', href: route('plans.list'), current: route().current('plans.*') }
 ]
 const userNavigation = [
   { name: 'Your Profile', href: route('profile.show') },

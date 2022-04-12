@@ -12,6 +12,7 @@ use App\Http\Controllers\MuscleController;
 use App\Http\Controllers\MuscleGroupController;
 use App\Http\Controllers\SetController;
 use App\Http\Controllers\WorkoutController;
+use App\Http\Controllers\PlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,8 @@ Route::resources([
     'workouts' => WorkoutController::class,
     'logs' => LogController::class,
     'equipment' => EquipmentController::class,
-    'sets' => SetController::class
+    'sets' => SetController::class,
+    'plans' => PlanController::class
 ]);
 
 Route::resource('muscles', MuscleController::class)->only([
@@ -59,6 +61,13 @@ Route::resource('workouts', WorkoutController::class)->names([
     'show' => 'workouts.show',
     'update' => 'workouts.update',
     'store' => 'workouts.store'
+]);
+
+Route::resource('plans', Plan::class)->names([
+    'index' => 'plans.list',
+    'show' => 'plans.show',
+    'update' => 'plans.update',
+    'store' => 'plans.store'
 ]);
 
 Route::resource('logs', LogController::class)->names([
