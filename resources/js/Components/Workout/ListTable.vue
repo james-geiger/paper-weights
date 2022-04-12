@@ -4,8 +4,7 @@
                 title="Delete Workout" @delete="handleDelete" @cancel="handleCancelDelete" />
   <div class="bg-white shadow overflow-hidden sm:rounded-md">
 <ul role="list" class="divide-y divide-gray-200">
-
-                                <li v-for="workout in workouts" :key="workout.id" class="px-4 py-5 sm:px-6 bg-white divide-y divide-gray-200">
+                                <li v-for="workout in workouts.data" :key="workout.id" class="px-4 py-5 sm:px-6 bg-white divide-y divide-gray-200">
                                     <div class="flex space-x-3">
                                         <div class="min-w-0 flex-1">
                                             <p class="text-lg font-medium text-gray-900 mb-2">
@@ -41,6 +40,7 @@
                                     </div>
                                 </li>
                     </ul>
+                    <pagination :data="workouts" />
   </div>
 </template>
 
@@ -51,6 +51,7 @@ import { Link } from '@inertiajs/inertia-vue3'
 import { Inertia } from '@inertiajs/inertia'
 import DeleteAlert from '@/Components/Modal/DeleteAlert.vue'
 import { ref } from 'vue'
+import Pagination from '@/Components/Pagination/CardFooterPagination'
 
 const showDeleting = ref(false)
 const modelDeleting = ref('')
@@ -78,7 +79,8 @@ export default {
     ClockIcon,
     PencilIcon,
     TrashIcon,
-    DeleteAlert
+    DeleteAlert,
+    Pagination
   },
   props: ['workouts'],
   setup() {

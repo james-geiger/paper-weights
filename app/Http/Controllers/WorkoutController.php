@@ -28,7 +28,7 @@ class WorkoutController extends Controller
      */
     public function index()
     {
-        $workouts = Workout::AuthUser()->newest()->get();
+        $workouts = Workout::AuthUser()->newest()->paginate(15);
 
         return Inertia::render('Workout/Index', ['workouts' => $workouts]);
     }
