@@ -60,4 +60,12 @@ class Log extends Model
         return $this->belongsToMany(Modifier::class, 'log_modifier');
     }
 
+    /**
+     * Get the parent model (workout or plan).
+     */
+    public function loggable()
+    {
+        return $this->morphTo();
+    }
+
 }

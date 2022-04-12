@@ -94,10 +94,10 @@ class LogController extends Controller
 
         $modifiers = Modifier::all();
 
-        $workout = $log->workout;
+        $workout = $log->loggable;
 
-        $prev_log = Log::where('workout_id', $log->workout_id)->where('order', $log->order - 1)->first();
-        $next_log = Log::where('workout_id', $log->workout_id)->where('order', $log->order + 1)->first();
+        $prev_log = Log::where('loggable_id', $log->workout_id)->where('loggable_type', 'App\\Models\\Workout')->where('order', $log->order - 1)->first();
+        $next_log = Log::where('loggable_id', $log->workout_id)->where('loggable_type', 'App\\Models\\Workout')->where('order', $log->order + 1)->first();
 
         $page = [
             'prev' => ($prev_log) ? route('logs.show', ['log' => $prev_log->id]) : null,
@@ -107,7 +107,7 @@ class LogController extends Controller
         $last_log = Log::with('workout')
                         ->where('exercise_id', $log->exercise->id)
                         ->where('id', '<>', $log->id)
-                        ->select('logs.*', \DB::raw('(SELECT date FROM workouts WHERE logs.workout_id = workouts.id ) as date'))
+                        ->select('logs.*', \DB::raw('(SELECT date FROM workouts WHERE logs.loggable_id = workouts.id AND logs.loggable_type = \'App\Models\Workout\' ) as date'))
                         ->orderBy('date', 'desc')
                         ->withCount('sets')
                         ->withSum('sets', 'reps')

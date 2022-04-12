@@ -80,7 +80,8 @@ class WorkoutController extends Controller
 
         $details = DB::table('workouts')
             ->where('workouts.id', '=', $workout->id)
-            ->join('logs', 'logs.workout_id', '=', 'workouts.id')
+            ->join('logs', 'logs.loggable_id', '=', 'workouts.id')
+            ->where('logs.loggable_type', 'App\\Models\\Workout')
             ->join('sets', 'sets.log_id', '=', 'logs.id')
             ->join('exercises', 'exercises.id', '=', 'logs.exercise_id')
             ->join('exercise_muscle', 'exercise_muscle.exercise_id', '=', 'exercises.id')
