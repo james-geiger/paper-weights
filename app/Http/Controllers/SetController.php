@@ -74,6 +74,8 @@ class SetController extends Controller
                 $last_set->unit_id == $set->unit_id ) {
                 $last_set->sets += $set->sets;
                 $last_set->save();
+            } else {
+                $set->save();
             }
         } else {
             $set->save();
