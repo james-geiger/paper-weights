@@ -178,7 +178,8 @@
                     <ul role="list" class="divide-y divide-gray-200" v-if="log.sets.length > 0">
                 <li v-for="set in log.sets" :key="set.id" class="py-4 flex justify-between">
                     <div class="ml-3">
-                        <p class="text-sm">
+                        <!--<p class="text-sm text-red-600 mr-2" v-if="setDeleting == set.id">Are you sure?  Again to delete, or <span class="text-gray-600 underline cursor-pointer" @click="handleCancelSetDelete">cancel.</span></p>-->
+                        <p :class="[ setDeleting == set.id ? 'opacity-30 text-sm' : 'text-sm']">
                             <span class="font-medium text-gray-900 mr-2">{{ set.order }}.</span>
                             <span v-if="set.weight && set.reps">
                                 <span class="font-medium text-gray-900 mr-2">{{ Math.round(set.weight) }}<span class="text-gray-500">lbs</span></span>
@@ -210,8 +211,8 @@
                         </p>
                     </div>
                     <div class="inline-flex">
-                        <p class="text-sm text-red-600 mr-2" v-if="setDeleting == set.id">Are you sure?  Again to delete, or <span class="text-gray-600 underline cursor-pointer" @click="handleCancelSetDelete">cancel.</span></p>
-                        <button type="button" @click="handleSetDelete(set.id)" class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
+                        <span class="text-sm mr-4 text-gray-600 underline cursor-pointer" v-if="setDeleting == set.id" @click="handleCancelSetDelete">Cancel</span>
+                        <button type="button" @click="handleSetDelete(set.id)" :class="[ setDeleting == set.id ? 'text-red-400 hover:text-red-600' : 'text-gray-400 hover:text-gray-600', '-m-2 p-2 rounded-full flex items-center']">
                             <TrashIcon class="h-5 w-5" />
                         </button>
                     </div>

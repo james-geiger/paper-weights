@@ -128,6 +128,11 @@ class SetController extends Controller
     {
         $set->delete();
 
+        Set::whereNull('deleted_at')
+            ->where('log_id', $set->log_id)
+            ->where('order', '>', $set->order)
+            ->decrement('order');
+
         return redirect()->action([LogController::class, 'show'], $set->log_id);
 
     }
