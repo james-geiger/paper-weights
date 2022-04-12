@@ -63,7 +63,7 @@ Route::resource('workouts', WorkoutController::class)->names([
     'store' => 'workouts.store'
 ]);
 
-Route::resource('plans', Plan::class)->names([
+Route::resource('plans', PlanController::class)->names([
     'index' => 'plans.list',
     'show' => 'plans.show',
     'update' => 'plans.update',

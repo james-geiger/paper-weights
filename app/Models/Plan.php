@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuids;
 use App\Models\Log;
+use Auth;
 
 class Plan extends Model
 {
@@ -39,6 +40,6 @@ class Plan extends Model
      */
     public function scopeNewest($query)
     {
-        return $query->orderBy('date', 'desc');
+        return $query->orderBy('created_at', 'desc');
     }
 }
