@@ -22,7 +22,7 @@ class PlanController extends Controller
      */
     public function index()
     {
-        $plans = Plan::AuthUser()->newest()->get();
+        $plans = Plan::AuthUser()->newest()->paginate(15);
 
         return Inertia::render('Plan/Index', ['plans' => $plans]);
     }
