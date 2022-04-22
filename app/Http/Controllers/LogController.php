@@ -107,7 +107,7 @@ class LogController extends Controller
         $last_log = Log::with('workout')
                         ->where('exercise_id', $log->exercise->id)
                         ->where('id', '<>', $log->id)
-                        ->where('user_id', $request->user->id)
+                        //->where('user_id', $request->user()->id)
                         ->select('logs.*', \DB::raw('(SELECT date FROM workouts WHERE logs.workout_id = workouts.id ) as date'))
                         ->orderBy('date', 'desc')
                         ->withCount('sets')
