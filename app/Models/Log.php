@@ -11,6 +11,7 @@ use App\Models\Workout;
 use App\Models\Set;
 use App\Models\Modifier;
 use App\Models\Type;
+use Auth;
 
 class Log extends Model
 {
@@ -58,6 +59,17 @@ class Log extends Model
     public function modifiers()
     {
         return $this->belongsToMany(Modifier::class, 'log_modifier');
+    }
+
+    /**
+     * Scope the query to only include the user's workouts.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
+     */
+    public function scopeAuthUser($query)
+    {
+        return $query->where('user_id', Auth::user()->id);
     }
 
 }

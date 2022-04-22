@@ -104,10 +104,10 @@ class LogController extends Controller
             'next' => ($next_log) ? route('logs.show', ['log' => $next_log->id]) : null,
         ];
 
-        $last_log = Log::with('workout')
+        $last_log = Log::AuthUser()
+                        ->with('workout')
                         ->where('exercise_id', $log->exercise->id)
                         ->where('id', '<>', $log->id)
-                        //->where('user_id', $request->user()->id)
                         ->select('logs.*', \DB::raw('(SELECT date FROM workouts WHERE logs.workout_id = workouts.id ) as date'))
                         ->orderBy('date', 'desc')
                         ->withCount('sets')
