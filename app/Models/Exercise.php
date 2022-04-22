@@ -69,7 +69,7 @@ class Exercise extends Model
     }
 
     /**
-     * Scope the query to only include the user's workouts.
+     * Scope the query to only include the user's exercises.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return void

@@ -32,23 +32,17 @@ Route::resources([
     'workouts' => WorkoutController::class,
     'logs' => LogController::class,
     'equipment' => EquipmentController::class,
-    'sets' => SetController::class
+    'sets' => SetController::class,
+    'exercises' => ExerciseController::class,
 ]);
 
 Route::resource('muscles', MuscleController::class)->only([
     'index', 'show'
 ]);
 
-Route::resource('exercises', ExerciseController::class)->only([
-    'show'
-]);
-
 Route::resource('groups', MuscleGroupController::class)->only([
     'index', 'show'
 ]);
-
-Route::get('/exercise/s', [ExerciseController::class, 'search'])->name('exercise.search');
-Route::post('/exercises/add', [ExerciseController::class, 'store_quick'])->name('exercises.store.quick');
 
 Route::patch('/log/reorder', [LogController::class, 'reorder'])->name('logs.reorder');
 
@@ -59,6 +53,13 @@ Route::resource('workouts', WorkoutController::class)->names([
     'show' => 'workouts.show',
     'update' => 'workouts.update',
     'store' => 'workouts.store'
+]);
+
+Route::resource('exercises', ExerciseController::class)->names([
+    'index' => 'exercises.list',
+    'show' => 'exercises.show',
+    'update' => 'exercises.update',
+    'store' => 'exercises.store'
 ]);
 
 Route::resource('logs', LogController::class)->names([
@@ -72,9 +73,15 @@ Route::resource('sets', SetController::class)->names([
     'destroy' => 'sets.destroy'
 ]);
 
-Route::resource('exercises', ExerciseController::class)->names([
-    'show' => 'exercises.show',
-]);
+Route::get('/exercise/s', [ExerciseController::class, 'search'])->name('exercise.search');
+Route::post('/exercises/add', [ExerciseController::class, 'store_quick'])->name('exercises.store.quick');
+
+Route::post('/exercises/{exercise}/equipment/{equipment}', [ExerciseController::class, 'attach_equipment']);
+Route::delete('/exercises/{exercise}/equipment/{equipment}', [ExerciseController::class, 'detach_equipment']);
+Route::post('/exercises/{exercise}/muscle/{muscle}', [ExerciseController::class, 'attach_muscle']);
+Route::delete('/exercises/{exercise}/muscle/{muscle}', [ExerciseController::class, 'detach_muscle']);
+
+Route::post('/workouts/{workout}/note', [WorkoutController::class, 'store_note'])->name('workouts.note.store');
 
 
 

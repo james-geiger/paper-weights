@@ -76,7 +76,20 @@
             <div class="rounded-lg bg-white overflow-hidden shadow">
             <div class="p-6">
                 <div class="pb-5">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Workout Insights</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Notes</h3>
+                </div>
+                <div>
+                    <label for="note" class="block text-sm font-medium text-gray-700 sr-only">Add a note</label>
+                    <div class="mt-1">
+                    <textarea v-model="note_body" rows="6" name="note" id="note" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="mt-4 rounded-lg bg-white overflow-hidden shadow">
+            <div class="p-6">
+                <div class="pb-5">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Insights</h3>
                 </div>
                 <div v-for="(group, index) in details" :key="group">
                     <div
@@ -111,7 +124,9 @@
 
 <script>
     import {
-        defineComponent
+        defineComponent,
+        ref,
+        watch
     } from 'vue'
     import draggable from 'vuedraggable'
     import {
@@ -158,8 +173,7 @@
             Menu,
             MenuButton,
             MenuItem,
-            MenuItems,
-
+            MenuItems
         },
         props: ['workout', 'logs', 'details'],
         data() {
@@ -169,9 +183,16 @@
                 modelDeleting: ''
             }
         },
-        setup() {
+        setup(props) {
+            const note_body = (props.workout.note) ? ref(props.workout.note.body) : ref('')
+            watch(note_body, _.debounce((note_body, prev_note_body) => {
+                axios.post(route('workouts.note.store', props.workout.id), { body: note_body }).then(response => {
+                        console.log(response.data)
+                })},1300)
+            )
             return {
-                toTitleCase
+                toTitleCase,
+                note_body
             }
         },
         methods: {

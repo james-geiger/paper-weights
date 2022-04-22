@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Requests\UpdateWorkoutRequest;
+use Illuminate\Http\Request;
+use App\Models\Note;
 
 use Illuminate\Support\Facades\DB;
 
@@ -148,5 +150,17 @@ class WorkoutController extends Controller
         $workout->delete();
 
         return redirect()->action([WorkoutController::class, 'index']);
+    }
+
+
+    public function store_note(Request $request, Workout $workout)
+    {
+
+        $note = Note::updateOrCreate(
+            [ 'notable_type' => 'App\\Models\\Workout', 'notable_id' => $workout->id ],
+            [ 'body' => $request->body ]
+        );
+
+        return response($note);
     }
 }

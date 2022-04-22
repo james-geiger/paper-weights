@@ -10,6 +10,7 @@ use Auth;
 use Carbon\Carbon;
 use App\Models\Log;
 use App\Models\Set;
+use App\Models\Note;
 use App\Models\Modifier;
 use App\Traits\Uuids;
 
@@ -18,6 +19,8 @@ class Workout extends Model
     use HasFactory, Uuids, SoftDeletes;
 
     protected $fillable = ['user_id', 'name', 'date', 'time'];
+
+    protected $with = ['note'];
 
     protected $appends = ['human_readable_date', 'human_readable_time'];
 
@@ -67,6 +70,14 @@ class Workout extends Model
     public function modifiers()
     {
         return $this->hasManyThrough(Modifier::class, Log::class);
+    }
+
+    /**
+     * Get the workout's note.
+     */
+    public function note()
+    {
+        return $this->morphOne(Note::class, 'notable');
     }
 
     /**
