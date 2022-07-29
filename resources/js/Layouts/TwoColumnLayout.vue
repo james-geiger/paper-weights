@@ -9,7 +9,7 @@
         <slot name="modals"></slot>
 
         <div class="min-h-full">
-            <Navigation />
+            <Navigation :quickAdd="quickAdd" />
             <!-- Page Heading -->
             <header class="bg-white shadow-sm">
                 <div class="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -49,22 +49,16 @@
     </div>
 </template>
 
-<script>
-    import { defineComponent } from 'vue'
-    import JetBanner from '@/Jetstream/Banner.vue'
-    import { Head, Link } from '@inertiajs/inertia-vue3';
-    import Navigation from '@/Components/Navigation/Navigation'
+<script setup>
+  import JetBanner from '@/Jetstream/Banner.vue'
+  import { Head, Link } from '@inertiajs/inertia-vue3';
+  import Navigation from '@/Components/Navigation/Navigation'
 
-    export default defineComponent({
-        props: {
-            title: String,
-        },
-
-        components: {
-            Navigation,
-            Head,
-            JetBanner,
-            Link,
-        },
-    })
+  defineProps({
+    title: String,
+    quickAdd: {
+      type: Boolean,
+      default: true
+    }
+  })
 </script>

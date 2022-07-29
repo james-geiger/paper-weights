@@ -1,8 +1,8 @@
 <template>
   <Head :title="title" />
   <div class="min-h-full">
-    <Navigation />
-    <header class="bg-white shadow-sm">
+    <Navigation :quickAdd="quickAdd" />
+    <header class="bg-white shadow-sm dark:bg-neutral-700">
       <div class="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <!-- Header Content --->
         <slot name="header"></slot>
@@ -19,25 +19,16 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Navigation from '@/Components/Navigation/Navigation'
 
 
-export default defineComponent({
-    props: {
-            title: String,
-        },
-  components: {
-    Navigation,
-    Head,
-    Link
-  },
-  setup() {
-    return {
-
-    }
-  },
+defineProps({
+  title: String,
+  quickAdd: {
+    type: Boolean,
+    default: true
+  }
 })
 </script>

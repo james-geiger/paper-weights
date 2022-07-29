@@ -14,6 +14,9 @@ use Inertia\Inertia;
 
 use Auth;
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
+
+use Illuminate\Support\Facades\Log as Logger;
 
 class WorkoutController extends Controller
 {
@@ -28,11 +31,32 @@ class WorkoutController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $workouts = Workout::AuthUser()->newest()->paginate(15);
 
-        return Inertia::render('Workout/Index', ['workouts' => $workouts]);
+        $today = CarbonImmutable::today($request->user()->timezone);
+
+        if ($request->query('date')) {
+            $base = CarbonImmutable::parse($request->query('date'));
+        } else {
+            $base = $today;
+        }
+        
+        $start = $base->startOfWeek();
+        $end = $base->endOfWeek();
+        $nextWeek = $base->endOfWeek()->addDay();
+        $prevWeek = $base->startOfWeek()->subDay();
+
+        $workouts = Workout::AuthUser()->where('date', '<=', $end)->where('date', '>=', $start)->orderBy('date', 'desc')->get();
+
+        $days = [];
+
+        for ($i=0; $i < 7; $i++) { 
+            $d = $start->addDays($i)->format('Y-m-d');
+            array_push($days, ['date' => $d, 'isToday' => $today->isSameDay($start->addDays($i)),'hasWorkout' => $workouts->contains('date', $d) ]);
+        }
+
+        return Inertia::render('Workout/Index', ['workouts' => $workouts, 'days' => $days, 'dates' => ['today' => $today, 'nextWeek' => $nextWeek, 'prevWeek' => $prevWeek]]);
     }
 
     /**

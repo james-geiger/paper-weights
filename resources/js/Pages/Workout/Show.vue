@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Workouts">
+    <app-layout title="Workouts" :quickAdd="false">
         <template #header>
             <show-header :workout="workout" @discard="discard" @showSearch="this.$refs.searchCommand.openSearch()" />
         </template>
@@ -9,51 +9,51 @@
                 title="Delete Exercise" @delete="handleDelete" @cancel="handleCancelDelete" />
             <div>
                 <search ref="searchCommand" @close="searching = !searching" :workout_id="workout.id" :order="numberOfExercises + 1"/>
-                <div class="bg-white shadow overflow-hidden rounded-md" v-if="logs.length > 0">
+                <div class="overflow-hidden bg-white rounded-md shadow" v-if="logs.length > 0">
                     <ul role="list" class="divide-y divide-gray-200">
                         <draggable :list="logs" tag="transition-group" handle=".handle" item-key="id" @end="handleDrop">
                             <template #item="{element}">
-                                <li class="px-4 py-5 sm:px-6 bg-white divide-y divide-gray-200">
+                                <li class="px-4 py-5 bg-white divide-y divide-gray-200 sm:px-6">
                                     <div class="flex space-x-3">
-                                        <div class="min-w-0 flex-1">
-                                            <p class="text-lg font-medium text-gray-900 mb-2">
+                                        <div class="flex-1 min-w-0">
+                                            <p class="mb-2 text-lg font-medium text-gray-900">
                                                 <a :href="route('exercises.show', element.exercise.id)"
                                                     class="hover:underline">{{ element.exercise.name }}</a>
                                             </p>
                                             <div class="inline-flex w-full space-x-6 text-sm text-gray-500">
-                                                <span class="inline-flex justify-center items-center">
-                                                    <HashtagIcon class="h-4 w-4 mr-2" />
+                                                <span class="inline-flex items-center justify-center">
+                                                    <HashtagIcon class="w-4 h-4 mr-2" />
                                                     {{ Math.round(element.sets_sum_sets) }}
                                                 </span>
-                                                <span class="inline-flex justify-center items-center">
-                                                    <CollectionIcon class="h-4 w-4 mr-2" />
+                                                <span class="inline-flex items-center justify-center">
+                                                    <CollectionIcon class="w-4 h-4 mr-2" />
                                                     {{ numberOfReps(element.sets)}}
                                                 </span>
-                                                <span class="inline-flex justify-center items-center">
-                                                    <ScaleIcon class="h-4 w-4 mr-2" />
+                                                <span class="inline-flex items-center justify-center">
+                                                    <ScaleIcon class="w-4 h-4 mr-2" />
                                                     {{ weightVolume(element.sets, 'lbs') }}
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="flex-shrink-0 self-center flex space-x-4">
+                                        <div class="flex self-center flex-shrink-0 space-x-4">
                                             <div class="relative z-10 inline-block text-left">
                                                 <a :href="route('logs.show', element.id)">
                                                     <button type="button"
-                                                        class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
-                                                        <PencilIcon class="h-5 w-5" />
+                                                        class="flex items-center p-2 -m-2 text-gray-400 rounded-full hover:text-gray-600">
+                                                        <PencilIcon class="w-5 h-5" />
                                                     </button>
                                                 </a>
                                             </div>
                                             <div class="relative z-10 inline-block text-left handle">
                                                     <button type="button" @click="beginDelete(element.id)"
-                                                        class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
-                                                        <TrashIcon class="h-5 w-5" />
+                                                        class="flex items-center p-2 -m-2 text-gray-400 rounded-full hover:text-gray-600">
+                                                        <TrashIcon class="w-5 h-5" />
                                                     </button>
                                             </div>
                                             <div class="relative z-10 inline-block text-left handle">
                                                 <button type="button"
-                                                    class="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600">
-                                                    <MenuAlt4Icon class="h-5 w-5" />
+                                                    class="flex items-center p-2 -m-2 text-gray-400 rounded-full hover:text-gray-600">
+                                                    <MenuAlt4Icon class="w-5 h-5" />
                                                 </button>
                                             </div>
                                         </div>
@@ -65,41 +65,41 @@
                 </div>
                 <div class="text-center" v-else>
                     <button type="button" @click="this.$refs.searchCommand.openSearch()"
-                        class="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <LightningBoltIcon class="mx-auto h-12 w-12 text-gray-400" />
-                        <span class="mt-2 block text-sm font-medium text-gray-900"> Add exercise </span>
+                        class="relative block w-full p-12 text-center border-2 border-gray-300 border-dashed rounded-lg hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <LightningBoltIcon class="w-12 h-12 mx-auto text-gray-400" />
+                        <span class="block mt-2 text-sm font-medium text-gray-900"> Add exercise </span>
                     </button>
                 </div>
             </div>
         </template>
         <template #right>
-            <div class="rounded-lg bg-white overflow-hidden shadow">
+            <div class="overflow-hidden bg-white rounded-lg shadow">
             <div class="p-6">
                 <div class="pb-5">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Notes</h3>
+                    <h3 class="text-lg font-medium leading-6 text-gray-900">Notes</h3>
                 </div>
                 <div>
                     <label for="note" class="block text-sm font-medium text-gray-700 sr-only">Add a note</label>
                     <div class="mt-1">
-                    <textarea v-model="note_body" rows="6" name="note" id="note" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                    <textarea v-model="note_body" rows="6" name="note" id="note" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                     </div>
                 </div>
             </div>
             </div>
-            <div class="mt-4 rounded-lg bg-white overflow-hidden shadow">
+            <div class="mt-4 overflow-hidden bg-white rounded-lg shadow">
             <div class="p-6">
                 <div class="pb-5">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Insights</h3>
+                    <h3 class="text-lg font-medium leading-6 text-gray-900">Insights</h3>
                 </div>
                 <div v-for="(group, index) in details" :key="group">
                     <div
-                        class="px-3 py-1 border-t border-b border-gray-200 bg-gray-50 text-sm font-medium text-gray-500">
+                        class="px-3 py-1 text-sm font-medium text-gray-500 border-t border-b border-gray-200 bg-gray-50">
                         <h3>{{ toTitleCase(index) }}</h3>
                     </div>
                     <div class="flow-root">
                         <ul role="list" class="divide-y divide-gray-200">
                             <li v-for="(muscle, index) in group" :key="muscle">
-                                <div class="px-3 py-5 relative focus-within:ring-2 focus-within:ring-indigo-500">
+                                <div class="relative px-3 py-5 focus-within:ring-2 focus-within:ring-indigo-500">
                                     <h3 class="text-sm font-semibold text-gray-800">
                                         {{ index }}
                                     </h3>
