@@ -12,7 +12,7 @@
             <Navigation />
             <!-- Page Heading -->
             <header class="bg-white shadow-sm">
-                <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                <div class="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <!-- Header Content --->
                     <slot name="header"></slot>
                     <!-- /Header Content --->
@@ -20,16 +20,16 @@
             </header>
 
             <!-- Page Content -->
-                <main class="mt-4 pb-8">
+                <main class="pb-8 mt-4">
       <div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 class="sr-only">Page title</h1>
         <!-- Main 3 column grid -->
-        <div class="grid grid-cols-1 gap-4 items-start lg:grid-cols-3 lg:gap-8">
+        <div class="grid items-start grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
           <!-- Left column -->
           <div class="grid grid-cols-1 gap-4 lg:col-span-2">
             <section aria-labelledby="section-1-title">
               <h2 class="sr-only" id="section-1-title">Section title</h2>
-              <div class="rounded-lg bg-white overflow-visible shadow" scroll-region="">
+              <div class="overflow-visible bg-white rounded-lg shadow" scroll-region="">
                 <slot name="main"></slot>
               </div>
             </section>
