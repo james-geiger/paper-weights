@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuids;
 use App\Models\Exercise;
@@ -70,6 +71,18 @@ class Log extends Model
     public function scopeAuthUser($query)
     {
         return $query->where('user_id', Auth::user()->id);
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('ordered', function (Builder $builder) {
+            $builder->orderBy('order', 'asc');
+        });
     }
 
 }

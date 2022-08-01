@@ -1,7 +1,7 @@
 <template>
   <Head :title="title" />
   <div class="min-h-full">
-    <Navigation :quickAdd="quickAdd" />
+    <Navigation />
     <header class="bg-white shadow-sm dark:bg-neutral-700">
       <div class="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <!-- Header Content --->

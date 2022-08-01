@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Workouts" :quickAdd="false">
+    <app-layout title="Workouts">
         <template #header>
             <show-header :workout="workout" @discard="discard" @showSearch="this.$refs.searchCommand.openSearch()" />
         </template>
@@ -122,129 +122,86 @@
     </app-layout>
 </template>
 
-<script>
-    import {
-        defineComponent,
-        ref,
-        watch
-    } from 'vue'
-    import draggable from 'vuedraggable'
-    import {
-        LightningBoltIcon,
-        CollectionIcon,
-        ScaleIcon,
-        HashtagIcon
-    } from '@heroicons/vue/outline'
-    import {
-        Inertia
-    } from '@inertiajs/inertia'
-    import AppLayout from '@/Layouts/TwoColumnLayout.vue'
-    import ShowHeader from '@/Components/Workout/ShowHeader.vue'
-    import Search from '@/Components/Search/Search.vue'
-    import DeleteAlert from '@/Components/Modal/DeleteAlert.vue'
-    import {
-        Menu,
-        MenuButton,
-        MenuItem,
-        MenuItems
-    } from '@headlessui/vue'
-    import {
-        PencilIcon,
-        TrashIcon,
-        MenuAlt4Icon
-    } from '@heroicons/vue/solid'
+<script setup>
+import { ref, watch, computed, provide } from 'vue'
+import draggable from 'vuedraggable'
+import { LightningBoltIcon, CollectionIcon, ScaleIcon, HashtagIcon } from '@heroicons/vue/outline'
+import { Inertia } from '@inertiajs/inertia'
+import AppLayout from '@/Layouts/TwoColumnLayout'
+import ShowHeader from '@/Components/Workout/ShowHeader'
+import Search from '@/Components/Search/Search'
+import DeleteAlert from '@/Components/Modal/DeleteAlert'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { PencilIcon, TrashIcon, MenuAlt4Icon } from '@heroicons/vue/solid'
 
-    const toTitleCase = str => str.replace(/\b\S/g, t => t.toUpperCase());
+const props = defineProps(['workout', 'logs', 'details'])
 
-    export default defineComponent({
-        components: {
-            draggable,
-            AppLayout,
-            CollectionIcon,
-            HashtagIcon,
-            ScaleIcon,
-            MenuAlt4Icon,
-            PencilIcon,
-            TrashIcon,
-            LightningBoltIcon,
-            ShowHeader,
-            Search,
-            DeleteAlert,
-            Menu,
-            MenuButton,
-            MenuItem,
-            MenuItems
-        },
-        props: ['workout', 'logs', 'details'],
-        data() {
-            return {
-                searching: false,
-                showDeleting: false,
-                modelDeleting: ''
-            }
-        },
-        setup(props) {
-            const note_body = (props.workout.note) ? ref(props.workout.note.body) : ref('')
-            watch(note_body, _.debounce((note_body, prev_note_body) => {
-                axios.post(route('workouts.note.store', props.workout.id), { body: note_body }).then(response => {
-                        console.log(response.data)
-                })},1300)
-            )
-            return {
-                toTitleCase,
-                note_body
-            }
-        },
-        methods: {
-            discard() {
-                Inertia.delete(route('workouts.destroy', this.workout.id))
-            },
-            beginDelete(id) {
-                this.showDeleting = true
-                this.modelDeleting = id
-            },
-            handleDelete() {
-                console.log('deleting...' + this.modelDeleting)
-                Inertia.delete(route('logs.destroy', this.modelDeleting))
-                this.showDeleting = false
-                this.modelDeleting = ''
-            },
-            handleCancelDelete() {
-                this.showDeleting = false
-                this.modelDeleting = ''
-            },
-            handleDrop(e) {
-                const oldIndex = e.oldIndex
-                const newIndex = e.newIndex
-                console.log({
-                    oldIndex,
-                    newIndex
-                })
-                const new_order = this.logs.flatMap((e) => e.id)
-                Inertia.patch(route('logs.reorder'), {reordered_logs: new_order})
-            },
-            numberOfReps(set){
-                const reps = _.map(set, (e) => e.sets * e.reps)
-                return _.sum(reps)
-            },
-            weightVolume(set, unit) {
-                var volume = 0
-                set.forEach(e => {
-                    volume += e.sets * e.reps * e.weight
-                });
-                if (volume >= 1000) {
-                    volume = volume / 1000
-                    return volume + 'k ' + unit
-                } else {
-                    return volume + ' ' + unit
-                }
-            }
-        },
-        computed: {
-            numberOfExercises() {
-                return this.logs.length
-            }
-        }
+provide(/* key */ 'quickAdd', /* value */ false)
+
+const searching = ref(false)
+const showDeleting = ref(false)
+const modelDeleting = ref('')
+const numberOfExercises = computed(() => {
+    return props.logs.length
+})
+
+const note_body = (props.workout.note) ? ref(props.workout.note.body) : ref('')
+
+const toTitleCase = str => str.replace(/\b\S/g, t => t.toUpperCase());
+
+const discard = () => {
+    Inertia.delete(route('workouts.destroy', props.workout.id))
+}
+
+const beginDelete = (id) => {
+    showDeleting.value = true
+    modelDeleting.value = id
+}
+
+const handleDelete = () => {
+    console.log('deleting...' + modelDeleting.value)
+    Inertia.delete(route('logs.destroy', modelDeleting.value))
+    showDeleting.value = false
+    modelDeleting.value = ''
+}
+
+const handleCancelDelete = () => {
+    showDeleting.value = false
+    modelDeleting.value = ''
+}
+
+const handleDrop = (e) => {
+    const oldIndex = e.oldIndex
+    const newIndex = e.newIndex
+    console.log({
+        oldIndex,
+        newIndex
     })
+    const new_order = props.logs.flatMap((e) => e.id)
+    Inertia.patch(route('logs.reorder'), {reordered_logs: new_order})
+}
 
+const numberOfReps = (set) => {
+    const reps = _.map(set, (e) => e.sets * e.reps)
+    return _.sum(reps)
+}
+
+const weightVolume = (set, unit) => {
+    var volume = 0
+    set.forEach(e => {
+        volume += e.sets * e.reps * e.weight
+    });
+    if (volume >= 1000) {
+        volume = volume / 1000
+        return volume + 'k ' + unit
+    } else {
+        return volume + ' ' + unit
+    }
+}
+
+watch(note_body, _.debounce((note_body, prev_note_body) => {
+    axios.post(route('workouts.note.store', props.workout.id), { body: note_body }).then(response => {
+        console.log(response.data)
+    })},1300)
+)
 </script>

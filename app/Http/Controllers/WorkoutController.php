@@ -47,7 +47,15 @@ class WorkoutController extends Controller
         $nextWeek = $base->endOfWeek()->addDay();
         $prevWeek = $base->startOfWeek()->subDay();
 
-        $workouts = Workout::AuthUser()->where('date', '<=', $end)->where('date', '>=', $start)->orderBy('date', 'desc')->get();
+        $workouts = Workout::AuthUser()
+            ->where('date', '<=', $end)
+            ->where('date', '>=', $start)
+            ->orderBy('date', 'desc')
+            ->with('logs')
+            ->with('sets')
+            ->withCount('logs')
+            ->withSum('sets', 'total_reps')
+            ->get();
 
         $days = [];
 
@@ -77,12 +85,17 @@ class WorkoutController extends Controller
      */
     public function store(StoreWorkoutRequest $request)
     {
-        $dt = new Carbon();
+
+        $timezone = (Auth::user()->timezone) ? Auth::user()->timezone : 'UTC';
+        $dt = CarbonImmutable::now($timezone);
+
+        Logger::debug($dt);
 
         $workout = Workout::create([
             'user_id' => Auth::user()->id,
             'name' => 'New Workout '.$dt->toFormattedDateString(),
-            'date' => $dt->toDateString()
+            'date' => $dt->toDateString(),
+            'time' => $dt->format('H:i')
         ]);
 
         $logs = $workout->logs->sortBy([

@@ -21,7 +21,7 @@
         </div>
         <div class="flex items-center">
           <div class="flex-shrink-0" v-if="quickAdd">
-            <button @click="togglePalette" type="button" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-500 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 hover:bg-opacity-75 dark:bg-indigo-500 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
+            <button @click="toggleWorkoutPalette" type="button" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-500 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 hover:bg-opacity-75 dark:bg-indigo-500 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">
               <PlusSmIcon class="w-5 h-5 mr-2 -ml-1" aria-hidden="true" />
               <span>New Workout</span>
             </button>
@@ -68,17 +68,18 @@
       </div>
     </DisclosurePanel>
   </Disclosure>
-  <palette ref="workoutPalette"></palette>
+  <palette />
 </template>
 
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
+import { MenuIcon, XIcon } from '@heroicons/vue/outline'
 import { PlusSmIcon } from '@heroicons/vue/solid'
 import { Link } from '@inertiajs/inertia-vue3';
-import { ref } from 'vue';
+import { inject } from 'vue';
 import Brandmark from '@/Components/Brand/Brandmark'
 import Palette from '@/Components/Command/WorkoutPalette'
+import { workoutPaletteStore } from '@/Stores/WorkoutPalette'
 
 const navigation = [
   { name: 'Workouts', href: route('workouts.list'), current: route().current('workouts.*') || route().current('logs.*') },
@@ -89,17 +90,9 @@ const userNavigation = [
   { name: 'Sign out', href: route('logout'), method: "POST" },
 ]
 
-const workoutPalette = ref()
+const quickAdd = inject('quickAdd', true)
 
-function togglePalette(){
-  workoutPalette.value.toggle()
-}
-
-defineProps({
-  quickAdd: {
-    type: Boolean,
-    default: true
-  }
-})
+const store = workoutPaletteStore()
+const { toggleWorkoutPalette } = store
 
 </script>

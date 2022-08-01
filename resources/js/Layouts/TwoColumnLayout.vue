@@ -9,7 +9,7 @@
         <slot name="modals"></slot>
 
         <div class="min-h-full">
-            <Navigation :quickAdd="quickAdd" />
+            <Navigation />
             <!-- Page Heading -->
             <header class="bg-white shadow-sm">
                 <div class="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">

@@ -1,6 +1,6 @@
 <template>
-  <TransitionRoot :show="open" as="template" @after-leave="query = ''" appear>
-    <Dialog as="div" class="relative z-10" @close="open = false">
+  <TransitionRoot :show="show" as="template" @after-leave="query = ''" appear>
+    <Dialog as="div" class="relative z-10" @close="show = false">
       <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
         <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-25" />
       </TransitionChild>
@@ -31,10 +31,10 @@
                   <h2 class="sr-only">Quick actions</h2>
                   <ul class="text-sm text-gray-400">
                     <ComboboxOption v-for="action in quickActions" :key="action.shortcut" :value="action" as="template" v-slot="{ active }">
-                      <Link as="li" :href="action.href" :method="action.method" :class="['flex cursor-default select-none items-center rounded-md px-3 py-2', active && 'bg-gray-800 text-white']">
+                      <li :class="['flex cursor-default select-none items-center rounded-md px-3 py-2', active && 'bg-gray-800 text-white']">
                         <component :is="action.icon" :class="['h-6 w-6 flex-none', active ? 'text-white' : 'text-gray-500']" aria-hidden="true" />
                         <span class="flex-auto ml-3 truncate">{{ action.name }}</span>
-                      </Link>
+                      </li>
                     </ComboboxOption>
                   </ul>
                 </li>
@@ -52,20 +52,18 @@
 </template>
 
 <script setup>
-import { computed, ref, defineExpose } from 'vue'
+import { computed, ref } from 'vue'
 import { SearchIcon } from '@heroicons/vue/solid'
 import { Link } from '@inertiajs/inertia-vue3'
 import { FolderIcon, PlusCircleIcon } from '@heroicons/vue/outline'
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxOptions,
-  ComboboxOption,
-  Dialog,
-  DialogPanel,
-  TransitionChild,
-  TransitionRoot,
-} from '@headlessui/vue'
+import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption, Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { workoutPaletteStore } from '@/Stores/WorkoutPalette'
+import { storeToRefs } from 'pinia'
+import { Inertia } from '@inertiajs/inertia'
+
+const store = workoutPaletteStore()
+const { show } = storeToRefs(store)
+const { toggleWorkoutPalette } = store
 
 const projects = [
   { id: 1, name: 'Workflow Inc. / Website Redesign', url: '#' },
@@ -76,9 +74,15 @@ const quickActions = [
   { name: 'New blank workout...', icon: PlusCircleIcon, url: route('workouts.store'),  method: "post" }
 ]
 
-const open = ref(false)
+const visit = (url, method) => {
+  
+  Inertia.visit(url, { method: method })
+}
 
-const toggle = () => open.value = !open.value
+function onSelect(action) {
+  toggleWorkoutPalette()
+  Inertia.visit(action.url, { method: action.method })
+}
 
 const query = ref('')
 const filteredProjects = computed(() =>
@@ -88,9 +92,4 @@ const filteredProjects = computed(() =>
         return project.name.toLowerCase().includes(query.value.toLowerCase())
       })
 )
-
-defineExpose({
-  toggle,
-});
-
 </script>

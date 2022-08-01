@@ -23,7 +23,7 @@ class Set extends Model
 
     protected $with = ['unit'];
 
-    protected $appends = ['human_readable_duration'];
+    protected $appends = ['human_readable_duration', 'total_volume'];
 
     /**
      * Get the human-readable time of the workout.
@@ -42,6 +42,14 @@ class Set extends Model
             } else {
                 return $seconds . 's';
             }
+        } else {
+            return '';
+        }
+    }
+
+    public function getTotalVolumeAttribute() {
+        if (!empty($this->weight)) {
+            return $this->sets * $this->reps * $this->weight;
         } else {
             return '';
         }
