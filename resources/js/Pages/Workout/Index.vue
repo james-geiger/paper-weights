@@ -39,7 +39,7 @@
         </template>
             <div v-if="workouts.length > 0">
                 <!--<workout-table :workouts="workouts" />-->
-                <workout-list :workouts="workouts" />
+                <workout-list :workouts="workouts" :viewing="dates.viewing" />
             </div>
             <div v-else class="max-w-3xl px-6 pt-4 pb-6 mx-auto text-gray-900 md:px-0 dark:text-white">
                 <button @click="toggleWorkoutPalette" type="button" class="relative block w-full p-12 text-center border border-dashed rounded-lg border-1 border-zinc-500 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

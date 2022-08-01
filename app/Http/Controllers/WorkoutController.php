@@ -64,7 +64,7 @@ class WorkoutController extends Controller
             array_push($days, ['date' => $d, 'isToday' => $today->isSameDay($start->addDays($i)),'hasWorkout' => $workouts->contains('date', $d) ]);
         }
 
-        return Inertia::render('Workout/Index', ['workouts' => $workouts, 'days' => $days, 'dates' => ['today' => $today, 'nextWeek' => $nextWeek, 'prevWeek' => $prevWeek]]);
+        return Inertia::render('Workout/Index', ['workouts' => $workouts, 'days' => $days, 'dates' => ['today' => $today, 'viewing' => $base, 'nextWeek' => $nextWeek, 'prevWeek' => $prevWeek]]);
     }
 
     /**
@@ -88,8 +88,6 @@ class WorkoutController extends Controller
 
         $timezone = (Auth::user()->timezone) ? Auth::user()->timezone : 'UTC';
         $dt = CarbonImmutable::now($timezone);
-
-        Logger::debug($dt);
 
         $workout = Workout::create([
             'user_id' => Auth::user()->id,
@@ -180,12 +178,17 @@ class WorkoutController extends Controller
      * @param  \App\Models\Workout  $Workout
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Workout $workout)
+    public function destroy(Workout $workout, Request $request)
     {
         $workout->sets()->delete();
         $workout->logs()->delete();
         $workout->delete();
 
+        Logger::debug($request->query('date'));
+
+        if ($request->query('date')) {
+            return redirect()->action([WorkoutController::class, 'index'], ['date' => $request->query('date')]);
+        }
         return redirect()->action([WorkoutController::class, 'index']);
     }
 

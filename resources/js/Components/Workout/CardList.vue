@@ -132,8 +132,9 @@ const stats = [
   { name: 'Avg. Click Rate', stat: '24.57%', previousStat: '28.62%', change: '4.05%', changeType: 'decrease' },
 ]
 
-defineProps({
-    workouts: Array
+const props = defineProps({
+    workouts: Array,
+    viewing: String
 })
 
 const showDeleting = ref(false)
@@ -145,7 +146,8 @@ const beginDelete = id => {
 }
 
 const handleDelete = () => {
-        Inertia.delete(route('workouts.destroy', modelDeleting.value))
+        console.log(props.today)
+        Inertia.delete(route('workouts.destroy', { workout: modelDeleting.value, date: props.viewing }))
         showDeleting.value = false
         modelDeleting.value = ''
 }
