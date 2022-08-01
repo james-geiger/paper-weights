@@ -1,6 +1,12 @@
 /* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
  * @license MIT */
 
+/*!
+  * pinia v2.0.17
+  * (c) 2022 Eduardo San Martin Morote
+  * @license MIT
+  */
+
 /**
  * @license
  * Lodash <https://lodash.com/>

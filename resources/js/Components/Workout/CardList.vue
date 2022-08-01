@@ -151,9 +151,9 @@ const handleDelete = () => {
 }
 
 const handleCancelDelete = () => {
-        showDeleting.value = false
-        modelDeleting.value = ''
-    }
+    showDeleting.value = false
+    modelDeleting.value = ''
+}
 
 const volume = (sets) => {
     var totalVolume = 0
