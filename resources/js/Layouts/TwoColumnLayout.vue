@@ -29,7 +29,7 @@
           <div class="grid grid-cols-1 gap-4 lg:col-span-2">
             <section aria-labelledby="section-1-title">
               <h2 class="sr-only" id="section-1-title">Section title</h2>
-              <div class="overflow-visible bg-white rounded-lg shadow" scroll-region="">
+              <div class="overflow-visible" scroll-region="">
                 <slot name="main"></slot>
               </div>
             </section>

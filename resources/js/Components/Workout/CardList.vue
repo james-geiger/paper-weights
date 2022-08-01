@@ -146,10 +146,10 @@ const beginDelete = id => {
 }
 
 const handleDelete = () => {
-        console.log(props.today)
-        Inertia.delete(route('workouts.destroy', { workout: modelDeleting.value, date: props.viewing }))
-        showDeleting.value = false
-        modelDeleting.value = ''
+    console.log(props.today)
+    Inertia.delete(route('workouts.destroy', { workout: modelDeleting.value, date: props.viewing }))
+    showDeleting.value = false
+    modelDeleting.value = ''
 }
 
 const handleCancelDelete = () => {

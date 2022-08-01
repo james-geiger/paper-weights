@@ -9,6 +9,8 @@
                 title="Delete Exercise" @delete="handleDelete" @cancel="handleCancelDelete" />
             <div>
                 <search ref="searchCommand" @close="searching = !searching" :workout_id="workout.id" :order="numberOfExercises + 1"/>
+                <LogList :logs="logs" />
+                <!--
                 <div class="overflow-hidden bg-white rounded-md shadow" v-if="logs.length > 0">
                     <ul role="list" class="divide-y divide-gray-200">
                         <draggable :list="logs" tag="transition-group" handle=".handle" item-key="id" @end="handleDrop">
@@ -70,6 +72,7 @@
                         <span class="block mt-2 text-sm font-medium text-gray-900"> Add exercise </span>
                     </button>
                 </div>
+                -->
             </div>
         </template>
         <template #right>
@@ -133,6 +136,7 @@ import Search from '@/Components/Search/Search'
 import DeleteAlert from '@/Components/Modal/DeleteAlert'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { PencilIcon, TrashIcon, MenuAlt4Icon } from '@heroicons/vue/solid'
+import LogList from '@/Components/Log/CardList'
 
 const props = defineProps(['workout', 'logs', 'details'])
 
