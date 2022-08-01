@@ -69,7 +69,7 @@ class LogController extends Controller
             'user_id' => Auth::user()->id
         ]);
 
-        return redirect()->action([LogController::class, 'show'], $log->id)->with('status', 'log-created');
+        return redirect()->action([WorkoutController::class, 'show'], $log->workout_id)->with('status', 'log-created');
 
     }
 

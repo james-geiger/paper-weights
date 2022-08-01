@@ -2,14 +2,15 @@
     <app-layout title="Workouts">
         <template #header>
             <show-header :workout="workout" @discard="discard" @showSearch="this.$refs.searchCommand.openSearch()" />
+            
         </template>
         <template #main>
             <delete-alert :open="showDeleting"
                 message="Are you sure you want to remove this exercise and its associated sets from this workout?"
                 title="Delete Exercise" @delete="handleDelete" @cancel="handleCancelDelete" />
             <div>
-                <search ref="searchCommand" @close="searching = !searching" :workout_id="workout.id" :order="numberOfExercises + 1"/>
-                <LogList :logs="logs" />
+                <!--<search ref="searchCommand" @close="searching = !searching" :workout_id="workout.id" :order="numberOfExercises + 1"/>-->
+                <LogList :logs="logs" :workout="workout"/>
                 <!--
                 <div class="overflow-hidden bg-white rounded-md shadow" v-if="logs.length > 0">
                     <ul role="list" class="divide-y divide-gray-200">
@@ -132,7 +133,7 @@ import { LightningBoltIcon, CollectionIcon, ScaleIcon, HashtagIcon } from '@hero
 import { Inertia } from '@inertiajs/inertia'
 import AppLayout from '@/Layouts/TwoColumnLayout'
 import ShowHeader from '@/Components/Workout/ShowHeader'
-import Search from '@/Components/Search/Search'
+import Search from '@/Components/Command/ExercisePalette'
 import DeleteAlert from '@/Components/Modal/DeleteAlert'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { PencilIcon, TrashIcon, MenuAlt4Icon } from '@heroicons/vue/solid'

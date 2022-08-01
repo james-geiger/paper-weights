@@ -9,7 +9,7 @@
         <!-- /Header Content --->
       </div>
     </header>
-    <main scroll-region>
+    <main>
       <div class="pt-4 pb-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <!-- Main Content -->
         <slot></slot>
@@ -17,11 +17,15 @@
       </div>
     </main>
   </div>
+  <WorkoutPalette />
+  <ExercisePalette />
 </template>
 
 <script setup>
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import Navigation from '@/Components/Navigation/Navigation'
+import WorkoutPalette from '@/Components/Command/WorkoutPalette'
+import ExercisePalette from '@/Components/Command/ExercisePalette'
 
 
 defineProps({

@@ -4,10 +4,8 @@
     <template>
     <div>
         <Head :title="title" />
-
         <jet-banner />
         <slot name="modals"></slot>
-
         <div class="min-h-full">
             <Navigation />
             <!-- Page Heading -->
@@ -18,9 +16,8 @@
                     <!-- /Header Content --->
                 </div>
             </header>
-
             <!-- Page Content -->
-                <main class="pb-8 mt-4">
+                <main class="pb-8 mt-4" scroll-region>
       <div class="max-w-3xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 class="sr-only">Page title</h1>
         <!-- Main 3 column grid -->
@@ -29,12 +26,11 @@
           <div class="grid grid-cols-1 gap-4 lg:col-span-2">
             <section aria-labelledby="section-1-title">
               <h2 class="sr-only" id="section-1-title">Section title</h2>
-              <div class="overflow-visible" scroll-region="">
+              <div class="overflow-visible">
                 <slot name="main"></slot>
               </div>
             </section>
           </div>
-
           <!-- Right column -->
           <div class="grid grid-cols-1 gap-4">
             <section aria-labelledby="section-2-title">
@@ -44,6 +40,8 @@
           </div>
         </div>
       </div>
+      <WorkoutPalette />
+      <ExercisePalette />
     </main>
         </div>
     </div>
@@ -53,6 +51,8 @@
   import JetBanner from '@/Jetstream/Banner.vue'
   import { Head, Link } from '@inertiajs/inertia-vue3';
   import Navigation from '@/Components/Navigation/Navigation'
+  import WorkoutPalette from '@/Components/Command/WorkoutPalette'
+  import ExercisePalette from '@/Components/Command/ExercisePalette'
 
   defineProps({
     title: String,

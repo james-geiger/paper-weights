@@ -68,7 +68,6 @@
       </div>
     </DisclosurePanel>
   </Disclosure>
-  <palette />
 </template>
 
 <script setup>
@@ -78,7 +77,6 @@ import { PlusSmIcon } from '@heroicons/vue/solid'
 import { Link } from '@inertiajs/inertia-vue3';
 import { inject } from 'vue';
 import Brandmark from '@/Components/Brand/Brandmark'
-import Palette from '@/Components/Command/WorkoutPalette'
 import { workoutPaletteStore } from '@/Stores/WorkoutPalette'
 
 const navigation = [
