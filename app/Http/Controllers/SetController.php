@@ -47,8 +47,6 @@ class SetController extends Controller
         // Retrieve the validated input data
         $validated = $request;
 
-        $combine_like_sets = setting()->getUser($request->user(), 'combine-like-sets');
-
         $duration = ($validated->duration_hours || $validated->duration_minutes || $validated->duration_seconds) ? ($validated->duration_hours * 60 * 60) + ($validated->duration_minutes * 60) + ($validated->duration_seconds) : null;
 
         $set = new Set;
@@ -63,23 +61,7 @@ class SetController extends Controller
         $set->distance = $validated->distance;
         $set->unit_id = $validated->distance_unit;
 
-        if ($combine_like_sets && $validated->order > 1) {
-            $last_set = Set::where('log_id', $validated->log_id)->where('order', $validated->order - 1)->first();
-            if ($last_set->reps == $set->reps &&
-                $last_set->weight == $set->weight &&
-                $last_set->weight_added == $set->weight_added &&
-                $last_set->weight_assisted == $set->weight_assisted &&
-                $last_set->duration == $set->duration &&
-                $last_set->distance == $set->distance &&
-                $last_set->unit_id == $set->unit_id ) {
-                $last_set->sets += $set->sets;
-                $last_set->save();
-            } else {
-                $set->save();
-            }
-        } else {
-            $set->save();
-        }
+        $set->save();
 
         return redirect()->action([LogController::class, 'show'], $set->log->id)->with('status', 'set-created');
     }
