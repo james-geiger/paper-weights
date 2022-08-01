@@ -22203,11 +22203,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @heroicons/vue/solid */ "./node_modules/@heroicons/vue/solid/esm/ArrowSmDownIcon.js");
-/* harmony import */ var _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @heroicons/vue/solid */ "./node_modules/@heroicons/vue/solid/esm/ArrowSmUpIcon.js");
-/* harmony import */ var _heroicons_vue_outline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @heroicons/vue/outline */ "./node_modules/@heroicons/vue/outline/esm/DotsHorizontalIcon.js");
-/* harmony import */ var _headlessui_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @headlessui/vue */ "./node_modules/@headlessui/vue/dist/components/menu/menu.js");
+/* harmony import */ var _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @heroicons/vue/solid */ "./node_modules/@heroicons/vue/solid/esm/ArrowSmDownIcon.js");
+/* harmony import */ var _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @heroicons/vue/solid */ "./node_modules/@heroicons/vue/solid/esm/ArrowSmUpIcon.js");
+/* harmony import */ var _heroicons_vue_outline__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @heroicons/vue/outline */ "./node_modules/@heroicons/vue/outline/esm/DotsHorizontalIcon.js");
+/* harmony import */ var _headlessui_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @headlessui/vue */ "./node_modules/@headlessui/vue/dist/components/menu/menu.js");
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
+/* harmony import */ var _Components_Modal_DeleteAlert__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Modal/DeleteAlert */ "./resources/js/Components/Modal/DeleteAlert.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+
+
+
 
 
 
@@ -22238,6 +22244,23 @@ __webpack_require__.r(__webpack_exports__);
       change: '4.05%',
       changeType: 'decrease'
     }];
+    var showDeleting = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(false);
+    var modelDeleting = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)('');
+
+    var beginDelete = function beginDelete(id) {
+      showDeleting.value = true, modelDeleting.value = id;
+    };
+
+    var handleDelete = function handleDelete() {
+      _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia["delete"](route('workouts.destroy', modelDeleting.value));
+      showDeleting.value = false;
+      modelDeleting.value = '';
+    };
+
+    var handleCancelDelete = function handleCancelDelete() {
+      showDeleting.value = false;
+      modelDeleting.value = '';
+    };
 
     var volume = function volume(sets) {
       var totalVolume = 0;
@@ -22257,16 +22280,24 @@ __webpack_require__.r(__webpack_exports__);
 
     var __returned__ = {
       stats: stats,
+      showDeleting: showDeleting,
+      modelDeleting: modelDeleting,
+      beginDelete: beginDelete,
+      handleDelete: handleDelete,
+      handleCancelDelete: handleCancelDelete,
       volume: volume,
       reps: reps,
-      ArrowSmDownIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_1__["default"],
-      ArrowSmUpIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_2__["default"],
-      DotsHorizontalIcon: _heroicons_vue_outline__WEBPACK_IMPORTED_MODULE_3__["default"],
-      Menu: _headlessui_vue__WEBPACK_IMPORTED_MODULE_4__.Menu,
-      MenuButton: _headlessui_vue__WEBPACK_IMPORTED_MODULE_4__.MenuButton,
-      MenuItem: _headlessui_vue__WEBPACK_IMPORTED_MODULE_4__.MenuItem,
-      MenuItems: _headlessui_vue__WEBPACK_IMPORTED_MODULE_4__.MenuItems,
-      Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.Link
+      ArrowSmDownIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_4__["default"],
+      ArrowSmUpIcon: _heroicons_vue_solid__WEBPACK_IMPORTED_MODULE_5__["default"],
+      DotsHorizontalIcon: _heroicons_vue_outline__WEBPACK_IMPORTED_MODULE_6__["default"],
+      Menu: _headlessui_vue__WEBPACK_IMPORTED_MODULE_7__.Menu,
+      MenuButton: _headlessui_vue__WEBPACK_IMPORTED_MODULE_7__.MenuButton,
+      MenuItem: _headlessui_vue__WEBPACK_IMPORTED_MODULE_7__.MenuItem,
+      MenuItems: _headlessui_vue__WEBPACK_IMPORTED_MODULE_7__.MenuItems,
+      Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.Link,
+      DeleteAlert: _Components_Modal_DeleteAlert__WEBPACK_IMPORTED_MODULE_1__["default"],
+      ref: vue__WEBPACK_IMPORTED_MODULE_2__.ref,
+      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -26451,8 +26482,7 @@ var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Edit ");
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Delete ");
-
+var _hoisted_7 = ["onClick"];
 var _hoisted_8 = {
   "class": "mt-4 overflow-hidden bg-white divide-y divide-gray-200 rounded-lg shadow dark:bg-neutral-700 dark:divide-zinc-600"
 };
@@ -26628,24 +26658,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["MenuItem"], null, {
                   "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function (_ref2) {
                     var active = _ref2.active;
-                    return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
+                    return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+                      onClick: function onClick($event) {
+                        return $setup.beginDelete(workout.id);
+                      },
                       "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([active ? 'bg-zinc-100' : '', 'block px-4 py-2 text-sm text-gray-700']),
                       href: "#"
-                    }, {
-                      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                        return [_hoisted_7];
-                      }),
-                      _: 2
-                      /* DYNAMIC */
-
-                    }, 1032
-                    /* PROPS, DYNAMIC_SLOTS */
-                    , ["class"])];
+                    }, " Delete ", 10
+                    /* CLASS, PROPS */
+                    , _hoisted_7)];
                   }),
-                  _: 1
-                  /* STABLE */
+                  _: 2
+                  /* DYNAMIC */
 
-                })];
+                }, 1024
+                /* DYNAMIC_SLOTS */
+                )];
               }),
               _: 2
               /* DYNAMIC */
@@ -26687,8 +26715,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("\n            <h2 class=\"text-lg font-bold\">{{ workout.name }}</h2>\n            <h2 class=\"text-lg font-bold\">{{ workout.logs_count }}</h2>\n            <ul class=\"text-base\">\n                <li v-for=\"log in workout.logs\">\n                    {{ log.exercise.name }}\n                </li>\n            </ul>\n        ")]);
   }), 256
   /* UNKEYED_FRAGMENT */
-  ))], 2112
-  /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
+  )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["DeleteAlert"], {
+    open: $setup.showDeleting,
+    message: "Are you sure you want to delete this workout and its associated sets?  This can't be undone.",
+    title: "Delete Workout",
+    onDelete: $setup.handleDelete,
+    onCancel: $setup.handleCancelDelete
+  }, null, 8
+  /* PROPS */
+  , ["open"])], 64
+  /* STABLE_FRAGMENT */
   );
 }
 

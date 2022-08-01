@@ -23,9 +23,9 @@
                     </Link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                    <Link :class="[active ? 'bg-zinc-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">
+                    <a @click="beginDelete(workout.id)" :class="[active ? 'bg-zinc-100' : '', 'block px-4 py-2 text-sm text-gray-700']" href="#">
                     Delete
-                    </Link>
+                    </a>
                 </MenuItem>
     
                 </MenuItems>
@@ -110,6 +110,9 @@
             </ul>
         -->
     </div>
+    <delete-alert :open="showDeleting"
+        message="Are you sure you want to delete this workout and its associated sets?  This can't be undone."
+        title="Delete Workout" @delete="handleDelete" @cancel="handleCancelDelete" />
 </template>
 
 <script setup>
@@ -118,6 +121,9 @@ import { ArrowSmDownIcon, ArrowSmUpIcon } from '@heroicons/vue/solid'
 import { DotsHorizontalIcon } from '@heroicons/vue/outline';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Link } from '@inertiajs/inertia-vue3';
+import DeleteAlert from '@/Components/Modal/DeleteAlert'
+import { ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 
 
 const stats = [
@@ -129,6 +135,25 @@ const stats = [
 defineProps({
     workouts: Array
 })
+
+const showDeleting = ref(false)
+const modelDeleting = ref('')
+
+const beginDelete = id => {
+    showDeleting.value = true,
+    modelDeleting.value = id
+}
+
+const handleDelete = () => {
+        Inertia.delete(route('workouts.destroy', modelDeleting.value))
+        showDeleting.value = false
+        modelDeleting.value = ''
+}
+
+const handleCancelDelete = () => {
+        showDeleting.value = false
+        modelDeleting.value = ''
+    }
 
 const volume = (sets) => {
     var totalVolume = 0
